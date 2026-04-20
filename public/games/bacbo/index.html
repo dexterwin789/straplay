@@ -78,7 +78,7 @@
 }}</style>
 <!-- Pure-JS toast notifications (no CDN) -->
 <style>
-.vnb-toast{position:fixed;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:14px 22px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2147483647;font-family:Arial,sans-serif;font-size:14px;max-width:92vw;border:1px solid rgba(255,255,255,.2);transition:top .35s ease,opacity .35s ease;opacity:0;top:-80px;pointer-events:auto}
+.vnb-toast{position:fixed;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:14px 22px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2147483647;font-family:Arial,sans-serif;font-size:14px;width:92vw;max-width:92vw;border:1px solid rgba(255,255,255,.2);transition:top .35s ease,opacity .35s ease;opacity:0;top:-80px;pointer-events:auto}
 .vnb-toast.show{opacity:1;top:18px}
 .vnb-toast strong{color:#fff;font-weight:700}
 </style>
@@ -105,31 +105,7 @@
 <!-- /toast -->
 <style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px;width:95vw!important}}</style>
 <!-- Pure-JS toast notifications (no CDN) -->
-<style>
-.vnb-toast{position:fixed;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:14px 22px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2147483647;font-family:Arial,sans-serif;font-size:14px;max-width:92vw;border:1px solid rgba(255,255,255,.2);transition:top .35s ease,opacity .35s ease;opacity:0;top:-80px;pointer-events:auto}
-.vnb-toast.show{opacity:1;top:18px}
-.vnb-toast strong{color:#fff;font-weight:700}
-</style>
-<script>
-(function(){
-  if(window.__vnbToast)return;window.__vnbToast=1;
-  var NOMES=['José','João','Antonio','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Mateus','André','Fernando','Fábio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Jorge','Alexandre','Roberto','Diego','Vitor','Sérgio','Matheus','Thiago','Adriano','Luciano','Júlio','Renato','Alex','Vinícius','Rogério','Samuel','Ronaldo','Mário','Flávio','Douglas','Igor','Davi','Maria','Ana','Juliana','Márcia','Fernanda','Patrícia','Aline','Sandra','Camila','Amanda','Bruna','Jéssica','Letícia','Júlia','Luciana','Vanessa','Mariana','Gabriela','Vitória','Larissa','Cláudia','Beatriz','Rita','Luana','Sônia','Renata','Eliane'];
-  var SOBRE=['A.','B.','C.','D.','F.','G.','L.','M.','N.','P.','R.','S.','V.'];
-  var PRODUTO='BAC BO';
-  function valor(){return 'R$ '+(Math.random()*4800+200).toFixed(2).replace('.',',');}
-  function show(){
-    var t=document.createElement('div');t.className='vnb-toast';
-    var n=NOMES[Math.floor(Math.random()*NOMES.length)]+' '+SOBRE[Math.floor(Math.random()*SOBRE.length)];
-    t.innerHTML='<strong>'+n+'</strong> ganhou <strong>'+valor()+'</strong> no <strong>'+PRODUTO+'</strong>';
-    document.body.appendChild(t);
-    requestAnimationFrame(function(){t.classList.add('show');});
-    setTimeout(function(){t.style.opacity='0';t.style.top='-80px';setTimeout(function(){t.remove();},400);},4200);
-  }
-  function loop(){show();setTimeout(loop,(Math.floor(Math.random()*22)+7)*1000);}
-  function start(){setTimeout(loop,1500);}
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
-})();
-</script>
+
 <!-- /toast -->
 <style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px;width:95vw!important}}</style>
 </body>
