@@ -313,7 +313,7 @@ p{
 
         <div class="box-bottom">
             <div class="animated-text">
-                <span> MULTIPLICADOR DE 3.500X ATIVADO • FUNCIONANDO APENAS NA PLATAFORMA ABAIXO • NOVA BRECHA DETECTADA • FAÇA SUA ENTRADA IMEDIATAMENTE  MULTIPLICADOR DE 3.500X ATIVADO • FUNCIONANDO APENAS NA PLATAFORMA ABAIXO • NOVA BRECHA DETECTADA • FAÇA SUA ENTRADA IMEDIATAMENTE</span>
+                <span> MULTIPLICADOR DE 3.500X ATIVADO - FUNCIONANDO APENAS NA PLATAFORMA ABAIXO - NOVA BRECHA DETECTADA - FAÇA SUA ENTRADA IMEDIATAMENTE  MULTIPLICADOR DE 3.500X ATIVADO - FUNCIONANDO APENAS NA PLATAFORMA ABAIXO - NOVA BRECHA DETECTADA - FAÇA SUA ENTRADA IMEDIATAMENTE</span>
             </div>
             <button id="btn">GERAR NOVO SINAL</button>
 		</div>
@@ -913,5 +913,20 @@ p{
 </script>
 <!-- /toast -->
 <style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px;width:95vw!important}}</style>
+<script id="__VNB_IFRAME_SCROLL_JS__">
+(function(){
+  function wrap(){
+    document.querySelectorAll('iframe#iframe, iframe.iframe').forEach(function(f){
+      if(f.parentElement && f.parentElement.classList.contains('vnb-iframe-wrap')) return;
+      var w=document.createElement('div'); w.className='vnb-iframe-wrap';
+      f.parentNode.insertBefore(w,f); w.appendChild(f);
+      var c=document.createElement('div'); c.className='vnb-iframe-catcher';
+      w.appendChild(c);
+      c.addEventListener('click',function(){c.classList.add('off');});
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wrap); else wrap();
+})();
+</script>
 </body>
 </html>
