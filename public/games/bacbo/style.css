@@ -349,3 +349,21 @@ body::after {
     font-size: 18px;
   }
 }
+
+/* iframe padronizado 1140x700 centralizado */
+.iframe-wrap { width: 100% !important; display: flex !important; justify-content: center !important; }
+.iframe, #iframe {
+  border: 0 !important;
+  border-radius: 15px !important;
+  width: 1140px !important;
+  max-width: 100% !important;
+  height: 700px !important;
+  margin: 1em auto !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  display: block !important;
+}
+@media (max-width: 1200px){ .iframe, #iframe { width: 100% !important; } }
+@media (max-width: 1024px){ .iframe, #iframe { height: 600px !important; } }
+@media (max-width: 600px){ .iframe, #iframe { height: 520px !important; } }
+

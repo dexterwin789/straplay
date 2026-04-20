@@ -33,7 +33,7 @@
       </div>
 
       <div class="gale-div">
-        <h3 class="gale-title">ProteÃ§Ã£o</h3>
+        <h3 class="gale-title">Proteção</h3>
         <p id="galeDados" class="gale-data"><strong>---</strong></p>
       </div>
     </div>
@@ -50,7 +50,7 @@
       id="iframe"
       title="Cassino"
       loading="lazy"
-      referrerpolicy="strict-origin-when-cross-origin">
+      referrerpolicy="strict-origin-when-cross-origin" scrolling="no" frameborder="0" allowfullscreen>
     </iframe>
   </div>
 
@@ -60,25 +60,38 @@
   </footer>
 
   <script src="/games/aviator/script.js"></script>
-<!-- Notiflix via CDN -->
+<!-- Notiflix ganhadores -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notiflix/3.2.7/notiflix-3.2.7.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/notiflix/3.2.7/notiflix-aio-3.2.7.min.js"></script>
 <script>
 (function(){
-  var nomes = ['Jose','Joao','Antonio','Francisco','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Luis','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Manoel','Mateus','Andre','Fernando','Fabio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Marcio','Jorge','Alexandre','Roberto','Edson','Diego','Vitor','Sergio','Claudio','Matheus','Thiago','Geraldo','Adriano','Luciano','Julio','Renato','Alex','Vinicius','Rogerio','Samuel','Ronaldo','Mario','Flavio','Douglas','Igor','Davi','Maria','Ana','Francisca','Antonia','Adriana','Juliana','Marcia','Fernanda','Patricia','Aline','Sandra','Camila','Amanda','Bruna','Jessica','Leticia','Julia','Luciana','Vanessa','Mariana','Gabriela','Vera','Vitoria','Larissa','Claudia','Beatriz','Rita','Luana','Sonia','Renata','Eliane'];
-  var sobre = ['A.','B.','C.','D.','E.','F.','G.','H.','I.','J.','K.','L.','M.','N.','O.','P.','Q.','R.','S.','T.','U.','V.','W.','X.','Y.','Z.'];
-  var produto = 'AVIATOR';
-  if (typeof Notiflix === 'undefined') return;
-  Notiflix.Notify.init({ position: 'center-top', cssAnimationStyle: 'from-top', plainText: false, timeout: 4000, distance: '12px' });
-  function show(){
-    var nome = nomes[Math.floor(Math.random()*nomes.length)];
-    var sob  = sobre[Math.floor(Math.random()*sobre.length)];
-    var msg  = '<strong>' + nome + ' ' + sob + '</strong> acabou de GANHAR com o <strong>' + produto + '</strong>';
-    Notiflix.Notify.success(msg);
-    setTimeout(show, (Math.floor(Math.random()*36)+10) * 1000);
+  var nomes=['Jose','Joao','Antonio','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Mateus','Andre','Fernando','Fabio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Jorge','Alexandre','Roberto','Diego','Vitor','Sergio','Matheus','Thiago','Adriano','Luciano','Julio','Renato','Alex','Vinicius','Rogerio','Samuel','Ronaldo','Mario','Flavio','Douglas','Igor','Davi','Maria','Ana','Juliana','Marcia','Fernanda','Patricia','Aline','Sandra','Camila','Amanda','Bruna','Jessica','Leticia','Julia','Luciana','Vanessa','Mariana','Gabriela','Vitoria','Larissa','Claudia','Beatriz','Rita','Luana','Sonia','Renata','Eliane'];
+  var sobre=['A.','B.','C.','D.','F.','G.','L.','M.','N.','P.','R.','S.','V.'];
+  var produto='AVIATOR';
+  function valor(){ return 'R$ '+(Math.random()*4800+200).toFixed(2).replace('.',','); }
+  function boot(){
+    if(typeof Notiflix==='undefined'){ return setTimeout(boot,500); }
+    Notiflix.Notify.init({position:'center-top',cssAnimationStyle:'from-top',plainText:false,timeout:4000,distance:'12px',clickToClose:true});
+    function show(){
+      var n=nomes[Math.floor(Math.random()*nomes.length)]+' '+sobre[Math.floor(Math.random()*sobre.length)];
+      Notiflix.Notify.success('<strong>'+n+'</strong> ganhou <strong>'+valor()+'</strong> no <strong>'+produto+'</strong>');
+      setTimeout(show,(Math.floor(Math.random()*25)+8)*1000);
+    }
+    setTimeout(show,1500);
   }
-  setTimeout(show, 4000);
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',boot); } else { boot(); }
 })();
 </script>
+<style id="responsive-iframe-height">@media(max-width:600px){#iframe {
+    display: block;
+    margin: 1em auto;
+    width: 1140px;
+    max-width: 100%;
+    height: 700px;
+    border: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #000;
+}}</style>
 </body>
 </html>
