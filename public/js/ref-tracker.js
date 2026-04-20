@@ -20,6 +20,17 @@
     try {
       localStorage.setItem(KEY, JSON.stringify({ ref: ref, ts: now() }));
     } catch (e) {}
+    // Also set a cross-subdomain cookie so vemnabet.bet picks it up
+    // when the user navigates to the main domain / submits register form.
+    try {
+      var host = window.location.hostname || '';
+      var domain = '';
+      if (host.indexOf('vemnabet.bet') > -1) domain = '; Domain=.vemnabet.bet';
+      var secure = (window.location.protocol === 'https:') ? '; Secure' : '';
+      document.cookie = 'vnb_ref=' + encodeURIComponent(ref)
+        + '; Path=/; Max-Age=' + (30 * 24 * 60 * 60)
+        + '; SameSite=Lax' + domain + secure;
+    } catch (e) {}
   }
 
   function loadRef() {
