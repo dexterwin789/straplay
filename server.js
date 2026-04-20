@@ -17,8 +17,20 @@ const GAMES = {
   'hack-mines':          { title: 'Hack Mines',            vemna: 'mines-pro' },
   'aviator':             { title: 'Aviator',               vemna: 'aviator' },
   'bacbo':               { title: 'Bac Bo',                vemna: 'golden-wealth-baccarat' },
-  'aovivo':              { title: 'Roleta Ao Vivo',        vemna: 'crazy-time' }
+  'aovivo':              { title: 'Roleta Ao Vivo',        vemna: 'crazy-time' },
+  'xxxtreme':            { title: 'XXXTreme Lightning Roulette', vemna: 'lightning-roulette' }
 };
+
+// Prevent Cloudflare from caching HTML responses (game pages + SPA entry)
+app.use((req, res, next) => {
+  const accept = String(req.headers.accept || '');
+  if (accept.includes('text/html') || req.path === '/' || req.path.startsWith('/game/') || req.path.endsWith('.html')) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('CDN-Cache-Control', 'no-store');
+    res.set('Cloudflare-CDN-Cache-Control', 'no-store');
+  }
+  next();
+});
 
 app.get('/game/:slug', (req, res) => {
   const cfg = GAMES[req.params.slug];
