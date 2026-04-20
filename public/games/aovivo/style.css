@@ -1,7 +1,7 @@
-body {
+﻿body {
     font-family: Arial, sans-serif; /* Define a fonte para todo o corpo */
-    margin: 0; /* Remove margens padrão */
-    padding: 0; /* Remove preenchimento padrão */
+    margin: 0; /* Remove margens padrÃ£o */
+    padding: 0; /* Remove preenchimento padrÃ£o */
     
 }
 
@@ -10,19 +10,19 @@ body::before {
     content: ""; /* Cria um elemento vazio */
     position: fixed; /* Fixa a imagem de fundo na tela */
     top: 0; /* Posiciona no topo */
-    left: 0; /* Posiciona à esquerda */
-    right: 0; /* Posiciona à direita */
+    left: 0; /* Posiciona Ã  esquerda */
+    right: 0; /* Posiciona Ã  direita */
     bottom: 0; /* Posiciona na parte inferior */
-    background-image: url('/aovivo/img/aovivo_esc.jpg'); /* Define a imagem de fundo */
-    background-size: cover; /* Cobre toda a área disponível */
+    background-image: url('./img/aovivo_esc.jpg'); /* Define a imagem de fundo */
+    background-size: cover; /* Cobre toda a Ã¡rea disponÃ­vel */
     background-position: center; /* Centraliza a imagem */
-    z-index: -1; /* Coloca a imagem de fundo atrás de todos os outros elementos */
+    z-index: -1; /* Coloca a imagem de fundo atrÃ¡s de todos os outros elementos */
 }
 
 
 
 
-/* Estilo da seção de resultados */
+/* Estilo da seÃ§Ã£o de resultados */
 .result-section {
     background-color: #e2f0d9;
     border: 2px solid #8bc34a;
@@ -67,12 +67,12 @@ body::before {
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
-    z-index: 1; /* Certifique-se de que o contêiner esteja acima da sobreposição */
+    z-index: 1; /* Certifique-se de que o contÃªiner esteja acima da sobreposiÃ§Ã£o */
 }
 
 .sinal-gerado {
-    width: 380px; /* Define a largura do contêiner */
-    height: 50px; /* Define a altura do contêiner */
+    width: 380px; /* Define a largura do contÃªiner */
+    height: 50px; /* Define a altura do contÃªiner */
     border: 1px solid orange; /* Adiciona uma borda laranja */
     background-color: #1c1b1d; /* Define a cor de fundo */
     border-radius: 15px; /* Arredonda os cantos */
@@ -84,20 +84,20 @@ body::before {
 .sinal-text {
     font-size: 20px; /* Define o tamanho da fonte */
     color: rgb(21, 255, 0); /* Define a cor do texto */
-    margin: 0; /* Remove margem padrão */
+    margin: 0; /* Remove margem padrÃ£o */
 }
 
 .sinal-gale-container {
     display: flex; /* Usa flexbox para layout */
-    justify-content: space-between; /* Distribui espaço entre os itens */
-    width: 380px; /* Define a largura do contêiner */
+    justify-content: space-between; /* Distribui espaÃ§o entre os itens */
+    width: 380px; /* Define a largura do contÃªiner */
     margin-top: 20px; /* Adiciona margem superior */
-    gap: 30px; /* Adiciona espaço entre os itens */
+    gap: 30px; /* Adiciona espaÃ§o entre os itens */
 }
 
 .sinal-div,
 .gale-div {
-    width: 150px; /* Define a largura dos contêineres internos */
+    width: 150px; /* Define a largura dos contÃªineres internos */
     border: 1px solid orange; /* Adiciona uma borda laranja */
     background-color: #1c1b1d; /* Define a cor de fundo */
     border-radius: 15px; /* Arredonda os cantos */
@@ -108,7 +108,7 @@ body::before {
 .gale-title {
     font-size: 15px; /* Define o tamanho da fonte */
     color: rgb(255, 255, 255); /* Define a cor do texto */
-    margin: 0; /* Remove margem padrão */
+    margin: 0; /* Remove margem padrÃ£o */
     text-align: center; /* Centraliza o texto */
 }
 
@@ -126,14 +126,14 @@ body::before {
 
 .logo-container {
     display: flex; /* Usa flexbox para layout */
-    justify-content: center; /* Centraliza o conteúdo */
+    justify-content: center; /* Centraliza o conteÃºdo */
     margin-top: 20px; /* Adiciona margem superior */
 }
 
 .logo {
-    width: 20%; /* Ajuste conforme necessário */
-    max-width: 150px; /* Limite a largura máxima */
-    height: auto; /* Mantém a proporção da imagem */
+    width: 20%; /* Ajuste conforme necessÃ¡rio */
+    max-width: 150px; /* Limite a largura mÃ¡xima */
+    height: auto; /* MantÃ©m a proporÃ§Ã£o da imagem */
 }
 
 /* Estilos para mensagens de carregamento */
@@ -143,15 +143,15 @@ body::before {
 
 .analyzing {
     color: #ff9900; /* Cor laranja para "ANALISANDO SINAIS ..." */
-    animation: pulse 1.5s infinite; /* Animação de pulsar */
+    animation: pulse 1.5s infinite; /* AnimaÃ§Ã£o de pulsar */
 }
 
 .valid {
-    color: #4CAF50; /* Verde para "SINAL VÁLIDADO" */
-    animation: fadeIn 1s; /* Animação de aparecimento */
+    color: #4CAF50; /* Verde para "SINAL VÃLIDADO" */
+    animation: fadeIn 1s; /* AnimaÃ§Ã£o de aparecimento */
 }
 
-/* Animações */
+/* AnimaÃ§Ãµes */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -163,21 +163,21 @@ body::before {
     to { opacity: 1; }
 }
 
-/* Estilos para dispositivos móveis */
+/* Estilos para dispositivos mÃ³veis */
 @media (max-width: 768px) {
     body::before {
-        background-image: url('/aovivo/img/aovivo_mobile.jpg'); /* Altera a imagem de fundo para dispositivos móveis */
+        background-image: url('/aovivo/img/aovivo_mobile.jpg'); /* Altera a imagem de fundo para dispositivos mÃ³veis */
     }
 }
 
-/* Estilo do rodapé */
+/* Estilo do rodapÃ© */
 .footer {
     text-align: center;
     padding: 30px;
     position: relative; /* Para que o z-index funcione */
-    z-index: 2; /* Mantém acima da sobreposição */
-    color: rgba(255, 255, 255, 0.493); /* Cor do texto do rodapé */
-    font-size: 12px; /* Tamanho do texto do rodapé */
+    z-index: 2; /* MantÃ©m acima da sobreposiÃ§Ã£o */
+    color: rgba(255, 255, 255, 0.493); /* Cor do texto do rodapÃ© */
+    font-size: 12px; /* Tamanho do texto do rodapÃ© */
 }
 
 .guima-link {
@@ -222,8 +222,8 @@ body::before {
     font-family: 'Arial', sans-serif; /* Fonte Arial ou fonte sans-serif como alternativa */
     font-size: 14px;            /* Tamanho da fonte 15px */
         /* Deixa o texto em negrito */
-    margin: 10px 0;            /* Espaçamento vertical de 10px acima e abaixo */
-    padding: 2px;              /* Espaçamento interno de 5px */
+    margin: 10px 0;            /* EspaÃ§amento vertical de 10px acima e abaixo */
+    padding: 2px;              /* EspaÃ§amento interno de 5px */
     border-radius: 5px;        /* Opcional: cantos arredondados */
 
 }
@@ -290,7 +290,7 @@ body::before {
     border-bottom: 1px solid #ccc;
 }
 
-/* Efeito de brilho para o novo número */
+/* Efeito de brilho para o novo nÃºmero */
 .new-result {
     animation: glow 5s forwards;
 }
@@ -311,7 +311,7 @@ body::before {
     animation: borderGlow 5s forwards;
 }
 
-/*ANIMAÇÃO DOS TEXTOS VERIFICANDO */
+/*ANIMAÃ‡ÃƒO DOS TEXTOS VERIFICANDO */
 
 .loading-text {
     font-size: 14px; /* Tamanho da fonte */
@@ -321,19 +321,19 @@ body::before {
 /* Cor verde para "PLATAFORMA VALIDADA" */
 .loading-validada {
     color: rgb(88, 184, 223); /* Cor verde */
-    animation: loadingAnimation 1.5s infinite; /* Animação */
+    animation: loadingAnimation 1.5s infinite; /* AnimaÃ§Ã£o */
 }
 
 /* Cor laranja para "ANALISANDO PLATAFORMA" */
 .loading-analisando {
     color: orange; /* Cor laranja */
-    animation: loadingAnimation 1.5s infinite; /* Animação */
+    animation: loadingAnimation 1.5s infinite; /* AnimaÃ§Ã£o */
 }
 
 /* Efeito de loading */
 @keyframes loadingAnimation {
     0% {
-        opacity: 1; /* Começa opaco */
+        opacity: 1; /* ComeÃ§a opaco */
     }
     50% {
         opacity: 0.5; /* Meio opaco */
@@ -373,13 +373,13 @@ body::before {
     }
 }
 
-/* Estilo do contêiner do botão */
+/* Estilo do contÃªiner do botÃ£o */
 .container-botao {
-    text-align: center; /* Centraliza o conteúdo dentro do contêiner */
-    margin-top: 20px; /* Espaço entre o iframe e o botão */
+    text-align: center; /* Centraliza o conteÃºdo dentro do contÃªiner */
+    margin-top: 20px; /* EspaÃ§o entre o iframe e o botÃ£o */
 }
 
-/* Estilo do botão */
+/* Estilo do botÃ£o */
 .botao-bonito {
     padding: 12px 24px;
     font-size: 16px;
@@ -391,10 +391,10 @@ body::before {
     text-align: center;
     text-decoration: none;
     font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s; /* Efeito de transição */
+    transition: background-color 0.3s, transform 0.3s; /* Efeito de transiÃ§Ã£o */
 }
 
-/* Efeito hover no botão */
+/* Efeito hover no botÃ£o */
 .botao-bonito:hover {
     background-color: #8fbc8f; /* Cor ao passar o mouse */
     transform: scale(1.05); /* Leve aumento no tamanho */
@@ -403,7 +403,7 @@ body::before {
 
 
 
-/* Estilos para o botão da imagem home */
+/* Estilos para o botÃ£o da imagem home */
 .home-button {
     position: fixed;
     top: 10px;
@@ -411,7 +411,7 @@ body::before {
     z-index: 1000;
     cursor: pointer;
     border: 2px solid transparent;
-    border-radius: 50%; /* Arredondar o botão */
+    border-radius: 50%; /* Arredondar o botÃ£o */
     padding: 4px;
     background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
     transition: all 0.3s ease;
@@ -428,7 +428,7 @@ body::before {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
-/* Efeito de hover no botão */
+/* Efeito de hover no botÃ£o */
 .home-button:hover {
     border-color: #f0c420;
     box-shadow: 0 0 15px rgba(240, 196, 32, 0.8);
