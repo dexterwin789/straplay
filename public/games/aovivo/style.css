@@ -1,4 +1,4 @@
-﻿body {
+body {
     font-family: Arial, sans-serif; /* Define a fonte para todo o corpo */
     margin: 0; /* Remove margens padrÃ£o */
     padding: 0; /* Remove preenchimento padrÃ£o */
@@ -451,7 +451,7 @@ body::before {
   max-width: 100% !important;
   height: 700px !important;
   margin: 1em auto !important;
-  overflow: hidden !important;
+  
   background: #000 !important;
   display: block !important;
 }

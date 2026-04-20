@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --ray-origin-x: 0%;
   --ray-origin-y: 100%;
   --ray-strong: rgba(255,255,255,.04);
@@ -459,7 +459,7 @@ body::after {
   max-width: 100% !important;
   height: 700px !important;
   margin: 1em auto !important;
-  overflow: hidden !important;
+  
   background: #000 !important;
   display: block !important;
 }

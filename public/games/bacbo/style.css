@@ -361,7 +361,7 @@ body::after {
   max-width: 100% !important;
   height: 700px !important;
   margin: 1em auto !important;
-  overflow: hidden !important;
+  
   background: #000 !important;
   display: block !important;
 }
