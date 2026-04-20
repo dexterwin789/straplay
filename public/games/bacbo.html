@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StraPlay - Bac Bo</title>
+  <link rel="icon" href="/img/logo_straplay.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/games.css">
+</head>
+<body>
+
+<div class="home-button" onclick="location.href='/'"><img src="/img/logo_straplay.png" alt="Home"></div>
+
+<div class="logo-container"><img id="gameLogo" src="/img/bacbo.png" alt="Bac Bo" class="logo"></div>
+
+<div id="loadingMessage" class="sinal-container">
+  <h2 class="sinal-text loading-text loading-analisando" id="loadingText">ANALISANDO BAC BO...</h2>
+</div>
+
+<div id="sinalContainer" class="sinal-container">
+  <div class="sinal-gerado">
+    <h2 class="sinal-text" id="sinalgerado">---</h2>
+  </div>
+  <div class="sinal-gale-container">
+    <div class="sinal-div">
+      <h3 class="sinal-title">Sinal</h3>
+      <p id="sinalDados" class="sinal-data">---</p>
+      <p id="protecaoDados" class="sinal-data">---</p>
+    </div>
+    <div class="gale-div">
+      <h3 class="gale-title">Proteção</h3>
+      <p id="galeDados" class="gale-data"><strong>---</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="container-botao">
+  <button id="btnBacbo" class="botao-bonito" type="button">GERAR NOVO SINAL</button>
+</div>
+
+<div class="iframe-wrap">
+  <iframe class="iframe" src="" id="iframe" title="VemnaBet" allow="payment *; clipboard-write" allowfullscreen></iframe>
+</div>
+
+<footer class="footer">Copyright © 2025 - <a href="/"><b>STRAPLAY</b></a></footer>
+
+<script src="/js/game-core.js"></script>
+<script>
+(function () {
+  var loadingText = document.getElementById('loadingText');
+  var sinalGerado = document.getElementById('sinalgerado');
+  var sinalDados  = document.getElementById('sinalDados');
+  var protecao    = document.getElementById('protecaoDados');
+  var gale        = document.getElementById('galeDados');
+  var btn         = document.getElementById('btnBacbo');
+
+  var LADOS = ['AZUL', 'VERMELHO'];
+  var TEMPO = 30;
+  var PROT  = 'ATÉ 3 PROTEÇÕES';
+  var cd = null, expTimer = null;
+
+  function status(txt, ok) {
+    loadingText.textContent = txt;
+    loadingText.classList.remove('loading-analisando', 'loading-validada');
+    loadingText.classList.add(ok ? 'loading-validada' : 'loading-analisando');
+  }
+  function limpar() {
+    sinalGerado.textContent = '---';
+    sinalDados.textContent = '---';
+    protecao.textContent = '---';
+    gale.innerHTML = '<strong>---</strong>';
+    status('ANALISANDO BAC BO...', false);
+  }
+  function agendarExp(ts) {
+    if (expTimer) clearTimeout(expTimer);
+    var r = ts - Date.now();
+    if (r <= 0) { limpar(); return; }
+    expTimer = setTimeout(function () { limpar(); expTimer = null; }, r);
+  }
+  function gerarSinal() {
+    var lado = StraPlay.pick(LADOS);
+    var min = StraPlay.rand(3, 5);
+    var d = new Date(Date.now() + min * 60000);
+    var hora = StraPlay.pad(d.getHours()) + ':' + StraPlay.pad(d.getMinutes());
+
+    sinalGerado.textContent = 'ENTRADA CONFIRMADA';
+    sinalDados.innerHTML = 'APOSTAR NO ' + lado + '<br>NÃO ESQUEÇA<br>PROTEJA O EMPATE';
+    protecao.textContent = 'VÁLIDO ATÉ ' + hora;
+    gale.innerHTML = '<strong>' + PROT + '</strong>';
+    status('SINAL ENCONTRADO', true);
+    agendarExp(d.getTime());
+  }
+  function countdown(s) {
+    var r = s;
+    btn.disabled = true;
+    btn.textContent = 'AGUARDE ' + r + 's';
+    if (cd) clearInterval(cd);
+    cd = setInterval(function () {
+      r--;
+      if (r <= 0) { clearInterval(cd); cd = null; btn.disabled = false; btn.textContent = 'GERAR NOVO SINAL'; return; }
+      btn.textContent = 'AGUARDE ' + r + 's';
+    }, 1000);
+  }
+
+  btn.addEventListener('click', function () {
+    if (btn.disabled) return;
+    gerarSinal();
+    countdown(TEMPO);
+  });
+  limpar();
+})();
+</script>
+</body>
+</html>
