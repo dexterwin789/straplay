@@ -6,14 +6,7 @@
   <title>VemNaBet - Aviator</title>
   <link rel="icon" href="/favicon.png" type="image/png">
   <link rel="stylesheet" href="/games/aviator/style.css" />
-<style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style><style id="__VNB_IFRAME_FIX__">#iframe{margin:1em auto 3em auto!important;display:block;border:0;border-radius:15px;background:#000}body>div:last-of-type{margin-bottom:2em}</style><style id="__VNB_IFRAME_SCROLL__">
-.vnb-iframe-wrap{position:relative;display:inline-block;width:100%;text-align:center}
-.vnb-iframe-wrap iframe{position:relative;z-index:1}
-.vnb-iframe-catcher{position:absolute;inset:0;z-index:2;cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center}
-.vnb-iframe-catcher::before{content:"Clique para jogar";background:rgba(0,0,0,.55);color:#fff;padding:10px 22px;border-radius:999px;font:600 14px system-ui,Arial,sans-serif;letter-spacing:.3px}
-.vnb-iframe-catcher.off{display:none}
-</style>
-</head>
+<style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style><style id="__VNB_IFRAME_FIX__">#iframe{margin:1em auto 3em auto!important;display:block;border:0;border-radius:15px;background:#000}body>div:last-of-type{margin-bottom:2em}</style></head>
 <body>
   <div class="home-button" onclick="location.href='/'">
     <img src="/games/aviator/public/img/home.png" alt="Home" />
@@ -135,20 +128,5 @@
 </script>
 <!-- /toast -->
 <style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px;width:95vw!important}}</style>
-<script id="__VNB_IFRAME_SCROLL_JS__">
-(function(){
-  function wrap(){
-    document.querySelectorAll('iframe#iframe, iframe.iframe').forEach(function(f){
-      if(f.parentElement && f.parentElement.classList.contains('vnb-iframe-wrap')) return;
-      var w=document.createElement('div'); w.className='vnb-iframe-wrap';
-      f.parentNode.insertBefore(w,f); w.appendChild(f);
-      var c=document.createElement('div'); c.className='vnb-iframe-catcher';
-      w.appendChild(c);
-      c.addEventListener('click',function(){c.classList.add('off');});
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wrap); else wrap();
-})();
-</script>
 </body>
 </html>
