@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VemNaBet - Programa de Afiliados</title>
+  <meta name="description" content="Gere seu link de afiliado VemNaBet através do Straplay e ganhe comissão em cada depósito dos seus indicados.">
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css?v=20260420d">
+  <style>
+    .aff-hero{max-width:960px;margin:32px auto;padding:0 16px;color:#fff;font-family:Poppins,sans-serif;text-align:center}
+    .aff-hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;margin-bottom:8px;color:#25D366}
+    .aff-hero p.lead{color:#cfcfcf;font-size:clamp(.95rem,2.2vw,1.05rem);margin-bottom:24px}
+    .aff-card{background:rgba(0,0,0,.55);border:1px solid rgba(37,211,102,.35);border-radius:16px;padding:24px;backdrop-filter:blur(8px);text-align:left;margin-bottom:16px}
+    .aff-card h3{color:#25D366;font-weight:700;font-size:1.1rem;margin-bottom:12px}
+    .aff-card ol{padding-left:18px;margin:0;color:#e8e8e8;line-height:1.8}
+    .aff-form{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .aff-form input{flex:1;min-width:200px;padding:12px 14px;border-radius:10px;border:1px solid #25D366;background:#0d1b2a;color:#fff;font-size:1rem}
+    .aff-form button{padding:12px 22px;border-radius:10px;border:0;background:#25D366;color:#062913;font-weight:700;cursor:pointer;font-size:1rem}
+    .aff-form button:hover{filter:brightness(1.1)}
+    .aff-link-box{margin-top:14px;padding:14px;border-radius:10px;background:#0a1f13;border:1px dashed #25D366;word-break:break-all;color:#bff5d0;font-family:monospace;font-size:.95rem;display:none}
+    .aff-link-box.show{display:block}
+    .aff-copy{margin-top:10px;padding:8px 16px;border-radius:8px;border:0;background:#fff;color:#062913;font-weight:700;cursor:pointer;font-size:.9rem}
+    .aff-benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:16px}
+    .aff-benefit{background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:12px;padding:14px;color:#fff}
+    .aff-benefit strong{color:#25D366;display:block;font-size:1.4rem;margin-bottom:4px}
+    .aff-back{display:inline-block;margin-top:16px;color:#25D366;text-decoration:none;font-weight:600}
+    .aff-back:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<img src="/img/vemnabet-logo.png" alt="VemNaBet" class="logo">
+
+<div class="aff-hero">
+  <h1>💰 Programa de Afiliados</h1>
+  <p class="lead">Ganhe comissão em todos os depósitos dos seus indicados. Sem limite de ganhos.</p>
+
+  <div class="aff-benefits">
+    <div class="aff-benefit"><strong>até 30%</strong>de comissão por depósito</div>
+    <div class="aff-benefit"><strong>30 dias</strong>de cookie — ganha mesmo se o cadastro for depois</div>
+    <div class="aff-benefit"><strong>R$ 50</strong>saque mínimo via PIX</div>
+    <div class="aff-benefit"><strong>Tempo real</strong>estatísticas de cliques e conversões</div>
+  </div>
+
+  <div class="aff-card" style="margin-top:24px;">
+    <h3>Gere seu link de afiliado</h3>
+    <p style="color:#cfcfcf;margin-bottom:8px;font-size:.95rem;">
+      Digite seu código de afiliado (ex: <code style="color:#25D366">KARLOS10</code>) ou o ID da sua conta VemNaBet.
+      <br>Ainda não é afiliado? <a href="https://vemnabet.bet/dashboard/referrals" target="_blank" style="color:#25D366;font-weight:600">Cadastre-se aqui</a>.
+    </p>
+    <div class="aff-form">
+      <input type="text" id="refCode" placeholder="Seu código ou ID" maxlength="64" autocomplete="off">
+      <button type="button" id="btnGen">Gerar Link</button>
+    </div>
+    <div id="linkBox" class="aff-link-box">
+      <div style="color:#fff;font-weight:600;margin-bottom:4px;">Seu link Straplay (comissão vai para você):</div>
+      <div id="linkUrl"></div>
+      <button class="aff-copy" id="btnCopy">Copiar Link</button>
+    </div>
+  </div>
+
+  <div class="aff-card">
+    <h3>Como funciona</h3>
+    <ol>
+      <li>Copie seu link acima e compartilhe com amigos, grupos, redes sociais.</li>
+      <li>Quando o usuário clica, o código fica salvo no navegador dele por <strong>30 dias</strong>.</li>
+      <li>O mesmo código é enviado para o cassino VemNaBet via iframe automaticamente.</li>
+      <li>Quando ele se cadastra e deposita, você ganha comissão (porcentagem definida no seu código).</li>
+      <li>Acompanhe tudo em <a href="https://vemnabet.bet/dashboard/referrals" target="_blank" style="color:#25D366">vemnabet.bet/dashboard/referrals</a>.</li>
+    </ol>
+  </div>
+
+  <a class="aff-back" href="/">← Voltar para o Straplay</a>
+</div>
+
+<footer>&copy; VemNaBet 2025 Todos os direitos reservados.</footer>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="/js/ref-tracker.js?v=20260420d"></script>
+<script>
+(function(){
+  if (window.particlesJS) {
+    particlesJS('particles-js', {
+      particles: { number: { value: 60 }, color: { value: '#25D366' }, opacity: { value: 0.4 }, size: { value: 2 },
+        line_linked: { enable: true, color: '#25D366', opacity: 0.2 }, move: { enable: true, speed: 1 } },
+      retina_detect: true
+    });
+  }
+
+  var input = document.getElementById('refCode');
+  var btn = document.getElementById('btnGen');
+  var box = document.getElementById('linkBox');
+  var urlEl = document.getElementById('linkUrl');
+  var copy = document.getElementById('btnCopy');
+
+  function build() {
+    var code = (input.value || '').trim();
+    if (!code) { input.focus(); return; }
+    var base = window.location.origin;
+    var link = base + '/?ref=' + encodeURIComponent(code);
+    urlEl.textContent = link;
+    box.classList.add('show');
+  }
+  btn.addEventListener('click', build);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') build(); });
+  copy.addEventListener('click', function(){
+    var txt = urlEl.textContent;
+    if (!txt) return;
+    navigator.clipboard.writeText(txt).then(function(){
+      copy.textContent = 'Copiado!';
+      setTimeout(function(){ copy.textContent = 'Copiar Link'; }, 1500);
+    }).catch(function(){
+      var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      copy.textContent = 'Copiado!'; setTimeout(function(){ copy.textContent = 'Copiar Link'; }, 1500);
+    });
+  });
+
+  // Prefill from ?ref= if present
+  if (window.VNB_REF) { input.value = window.VNB_REF; build(); }
+})();
+</script>
+</body>
+</html>
