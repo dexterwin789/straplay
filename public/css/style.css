@@ -7,14 +7,13 @@ html, body {
   font-family: 'Poppins', Arial, sans-serif;
   color: #fff;
   overflow-x: hidden;
+  overflow-y: auto;
 }
-/* Scroll funcional sem scrollbar visivel (funciona na pagina e dentro de iframes) */
-html {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge legado */
-}
+/* Scroll funcional sem scrollbar visivel (mesma abordagem do sidebar) */
+html, body { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar,
-body::-webkit-scrollbar { width: 0; height: 0; display: none; }
+body::-webkit-scrollbar,
+*::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
 body { -webkit-overflow-scrolling: touch; }
 body {
   background-image: url('/img/fundo.jpg');
