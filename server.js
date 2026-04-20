@@ -6,24 +6,24 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
-// Mapeamento slug -> template + meta
+// Slug -> VemnaBet game code
 const GAMES = {
-  'hack-tiger':          { tpl: 'slot',    title: 'Fortune Tiger',    img: '/img/tiger01.png',         vemna: 'fortune-tiger' },
-  'hack-rabbit':         { tpl: 'slot',    title: 'Fortune Rabbit',   img: '/img/rabbit01.png',        vemna: 'fortune-rabbit' },
-  'hack-mouse':          { tpl: 'slot',    title: 'Fortune Mouse',    img: '/img/mouse01.png',         vemna: 'fortune-mouse' },
-  'hack-ox':             { tpl: 'slot',    title: 'Fortune Ox',       img: '/img/touro01.png',         vemna: 'fortune-ox' },
-  'hack-dragon':         { tpl: 'slot',    title: 'Fortune Dragon',   img: '/img/dragon.png',          vemna: 'fortune-dragon' },
-  'hack-double-fortune': { tpl: 'slot',    title: 'Double Fortune',   img: '/img/fortune-double.png',  vemna: 'double-fortune' },
-  'hack-mines':          { tpl: 'mines',   title: 'Mines',            img: '/img/mines2.png',          vemna: 'mines-pro' },
-  'aviator':             { tpl: 'aviator', title: 'Aviator',          img: '/img/aviator.png',         vemna: 'aviator' },
-  'bacbo':               { tpl: 'bacbo',   title: 'Bac Bo',           img: '/img/bacbo.png',           vemna: 'bac-bo' },
-  'aovivo':              { tpl: 'aovivo',  title: 'Roleta Ao Vivo',   img: '/img/roleta_ao_vivo.png',  vemna: 'crazy-time' }
+  'hack-tiger':          { title: 'Hack Fortune Tiger',    vemna: 'fortune-tiger' },
+  'hack-rabbit':         { title: 'Hack Fortune Rabbit',   vemna: 'fortune-rabbit' },
+  'hack-mouse':          { title: 'Hack Fortune Mouse',    vemna: 'fortune-mouse' },
+  'hack-ox':             { title: 'Hack Fortune Ox',       vemna: 'fortune-ox' },
+  'hack-dragon':         { title: 'Hack Fortune Dragon',   vemna: 'fortune-dragon' },
+  'hack-double-fortune': { title: 'Hack Double Fortune',   vemna: 'double-fortune' },
+  'hack-mines':          { title: 'Hack Mines',            vemna: 'mines-pro' },
+  'aviator':             { title: 'Aviator',               vemna: 'aviator' },
+  'bacbo':               { title: 'Bac Bo',                vemna: 'golden-wealth-baccarat' },
+  'aovivo':              { title: 'Roleta Ao Vivo',        vemna: 'crazy-time' }
 };
 
 app.get('/game/:slug', (req, res) => {
   const cfg = GAMES[req.params.slug];
   if (!cfg) return res.redirect('/');
-  res.sendFile(path.join(__dirname, 'public', 'games', cfg.tpl + '.html'));
+  res.sendFile(path.join(__dirname, 'public', 'games', req.params.slug, 'index.html'));
 });
 
 app.get('/api/game/:slug', (req, res) => {

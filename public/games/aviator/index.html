@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StraPlay - Aviator</title>
+  <link rel="icon" href="/games/aviator/public/img/LOGO.png" type="image/x-icon" />
+  <link rel="stylesheet" href="/games/aviator/style.css" />
+</head>
+<body>
+  <div class="home-button" onclick="location.href='/'">
+    <img src="/games/aviator/public/img/home.png" alt="Home" />
+  </div>
+
+  <div class="logo-container">
+    <img src="/games/aviator/public/img/aviator.png" alt="Logo Aviator" class="logo" />
+  </div>
+
+  <div id="loadingMessage" class="sinal-container">
+    <h2 class="sinal-text loading-text loading-analisando" id="loadingText">ANALISANDO AVIATOR...</h2>
+  </div>
+
+  <div id="sinalContainer" class="sinal-container">
+    <div class="sinal-gerado">
+      <h2 class="sinal-text" id="sinalgerado">---</h2>
+    </div>
+
+    <div class="sinal-gale-container">
+      <div class="sinal-div">
+        <h3 class="sinal-title">Sinal</h3>
+        <p id="sinalDados" class="sinal-data">---</p>
+        <p id="protecaoDados" class="sinal-data">---</p>
+      </div>
+
+      <div class="gale-div">
+        <h3 class="gale-title">ProteÃ§Ã£o</h3>
+        <p id="galeDados" class="gale-data"><strong>---</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-botao">
+    <button id="btnAviator" class="botao-bonito" type="button">GERAR NOVO SINAL</button>
+  </div>
+
+  <div class="iframe-wrap">
+    <iframe
+      class="iframe"
+      src="https://vemnabet.bet/game/aviator"
+      id="iframe"
+      title="Cassino"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+  </div>
+
+  <footer class="footer">
+    Copyright 2026 -
+    <a href="" target="_blank" rel="noopener noreferrer" class="guima-link"><b>STRAPLAY</b></a>
+  </footer>
+
+  <script src="/games/aviator/script.js"></script>
+</body>
+</html>

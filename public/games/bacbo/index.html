@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StraPlay - Bac Bo</title>
+  <link rel="icon" href="/games/bacbo/public/img/LOGO.png" type="image/x-icon" />
+  <link rel="stylesheet" href="/games/bacbo/style.css" />
+</head>
+<body>
+  <div class="home-button" onclick="location.href='/'">
+    <img src="/games/bacbo/public/img/home.png" alt="Home" />
+  </div>
+
+  <div class="page-wrap">
+    <div class="logo-container">
+      <img src="/games/bacbo/public/img/bacbo-logo.svg" alt="Logo Bac Bo" class="logo" />
+    </div>
+
+    <!-- <div id="results" class="results" aria-hidden="true"></div> -->
+
+    <div id="loadingMessage" class="sinal-container status-box">
+      <h2 class="sinal-text loading-text loading-analisando" id="loadingText">ANALISANDO BAC BO...</h2><br>
+    </div>
+
+    <div id="sinalContainer" class="sinal-container">
+      <div class="sinal-gerado">
+        <h2 class="sinal-text" id="sinalgerado">---</h2>
+      </div>
+
+      <div class="sinal-gale-container">
+        <div class="sinal-div">
+          <h3 class="sinal-title">Sinal</h3>
+          <p id="sinalDados" class="sinal-data">---</p>
+          <p id="protecaoDados" class="sinal-data">---</p>
+        </div>
+
+        <div class="gale-div">
+          <h3 class="gale-title">ProteÃ§Ã£o</h3>
+          <p id="galeDados" class="gale-data gale-data-fixed"><strong>---</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-botao">
+      <button id="btnBacbo" class="botao-bonito" type="button">GERAR NOVO SINAL</button>
+    </div>
+
+    <div class="iframe-wrap">
+      <iframe
+        class="iframe"
+        src="https://vemnabet.bet/game/golden-wealth-baccarat"
+        id="iframe"
+        title="Cassino"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin">
+      </iframe>
+    </div>
+  </div>
+
+  <footer class="footer">
+    Copyright 2026 - STRAPLAY
+    <a href="" target="_blank" rel="noopener noreferrer" class="guima-link"><b>STRAPLAY</b></a>
+  </footer>
+
+  <script src="/games/bacbo/script.js"></script>
+</body>
+</html>

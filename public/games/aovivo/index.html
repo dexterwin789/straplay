@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stra Play - Ao Vivo</title>
+  <link rel="icon" href="/img/logo_straplay.png" type="image/x-icon" />
+  <script src="/games/aovivo/local-feed.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="/games/aovivo/style.css">
+</head>
+
+<body>
+  <!-- Botão Home no canto superior direito -->
+  <div class="home-button" onclick="location.href='/'">
+    <img src="/games/aovivo/img/home.png" alt="Home">
+  </div>
+
+  <div class="logo-container">
+    <img src="/games/aovivo/img/Design.png" alt="Logo Xtreme" class="logo">
+  </div>
+
+  <div class='ultimosnumeros'>Últimos Números</div>
+  <div id="results" class="results">Carregando resultados...</div>
+
+  <div id="loadingMessage" class="sinal-container">
+    <h2 class="sinal-text loading-text" id="loadingText">---</h2>
+  </div>
+
+  <div id="sinalContainer" class="sinal-container">
+    <div id="sinalgeradoDados" class="sinal-gerado">
+      <h2 class="sinal-text" id="sinalgerado">---</h2>
+    </div>
+
+    <div class="sinal-gale-container">
+      <div class="sinal-div">
+        <h3 class="sinal-title">Sinal:</h3>
+        <p id="sinalDados" class="sinal-data">---</p>
+        <p id="protecaoDados" class="sinal-data">---</p>
+      </div>
+
+      <div class="gale-div">
+        <h3 class="gale-title">Proteção:</h3>
+        <p id="galeDados" class="gale-data"><strong>---</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <iframe class="iframe" src="https://vemnabet.bet/game/crazy-time" id="iframe"></iframe>
+  </div>
+
+  <footer class="footer">
+    Copyright © 2024 - STRAPLAY
+    <a href="" target="_blank" class="guima-link"><b>STRAPLAY</b></a>
+  </footer>
+
+  <script type="text/javascript">
+    // ===== ÚNICA CONEXÃO SOCKET.IO ===== //
+    const socket = io('https://straplay.com', {
+      path: '/aovivo/socket.io',
+      transports: ['websocket', 'polling']
+      // forceNew removido (default false)
+    });
+	const PAGE_ID = 'aovivo';
+	const storageKey = (key) => `${PAGE_ID}:${key}`;
+
+    let dadosAtuais = null;
+    let analisar = false;
+    let fallbackStorage = {};
+    let resetTimerId = null;
+
+    // ===== LocalStorage helpers ===== //
+    function isLocalStorageAvailable() {
+      try {
+        const test = '__localStorageTest__';
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+	function setItem(key, value) {
+	  if (isLocalStorageAvailable()) localStorage.setItem(storageKey(key), value);
+	  else fallbackStorage[storageKey(key)] = value;
+	}
+
+	function getItem(key) {
+	  if (isLocalStorageAvailable()) return localStorage.getItem(storageKey(key));
+	  return fallbackStorage[storageKey(key)] || null;
+	}
+
+	function removeItem(key) {
+	  if (isLocalStorageAvailable()) localStorage.removeItem(storageKey(key));
+	  else delete fallbackStorage[storageKey(key)];
+	}
+
+    // ===== UI: sinal ===== //
+    function displaySinal(dados) {
+      if (!dados) return;
+
+      // Se chegou sinal, cancela qualquer reset pendente
+      if (resetTimerId) {
+        clearTimeout(resetTimerId);
+        resetTimerId = null;
+      }
+
+      analisar = true;
+      dados.timestamp = Date.now();
+      setItem('sinalGerado', JSON.stringify(dados));
+
+      $('#sinalgerado').text(dados.sinalgerado || '- - -');
+      $('#sinalDados').html(`${dados.tipo || ''} ${dados.msg || ''}`);
+      $('#protecaoDados').text(dados.protecao || '- - -');
+      $('#galeDados').html(`<strong>${dados.gales || '- - -'}</strong>`);
+
+      updateLoadingMessage();
+    }
+
+    function clearSinal() {
+      dadosAtuais = null;
+      analisar = false;
+
+      removeItem('sinalGerado');
+
+      $('#sinalgerado').text('- - -');
+      $('#sinalDados').text('- - -');
+      $('#protecaoDados').text('- - -');
+      $('#galeDados').html('- - -');
+
+      updateLoadingMessage();
+    }
+
+    function loadSinalFromStorage() {
+      const savedSinal = getItem('sinalGerado');
+      const expirationTime = 3600000; // 1h
+
+      if (savedSinal) {
+        const dados = JSON.parse(savedSinal);
+        const currentTime = Date.now();
+        const storedTime = dados.timestamp || 0;
+
+        if (currentTime - storedTime > expirationTime) {
+          removeItem('sinalGerado');
+          clearSinal();
+        } else {
+          displaySinal(dados);
+        }
+      } else {
+        clearSinal();
+      }
+    }
+
+    function updateLoadingMessage() {
+      const loadingText = $('#loadingText');
+      loadingText.removeClass('loading-validada loading-analisando');
+
+      if (analisar) {
+        loadingText.text('✅ SINAL ENCONTRADO');
+        loadingText.addClass('loading-validada');
+      } else {
+        loadingText.text('🔎 BUSCANDO SINAIS...');
+        loadingText.addClass('loading-analisando');
+      }
+    }
+
+    $(document).ready(() => {
+      loadSinalFromStorage();
+    });
+
+    // Eventos do servidor
+    socket.on('sinalGerado', (dados) => {
+      displaySinal(dados);
+    });
+
+    socket.on('resetSinal', () => {
+      // agenda limpar, mas evita acumular timeouts
+      if (resetTimerId) clearTimeout(resetTimerId);
+      resetTimerId = setTimeout(() => {
+        clearSinal();
+        resetTimerId = null;
+      }, 3000);
+    });
+
+    // ===== UI: resultados ===== //
+    function displayResults(results) {
+      const resultsDiv = $('#results');
+      resultsDiv.empty();
+
+      results.forEach((num, index) => {
+        const resultBox = $('<div>').text(String(num)).addClass('result-box');
+
+        if (index === 0) resultBox.addClass('new-result');
+
+        if (['1','3','5','7','9','12','14','16','18','19','21','23','25','27','30','32','34','36'].includes(String(num))) {
+          resultBox.addClass('red');
+        } else if (['2','4','6','8','10','11','13','15','17','20','22','24','26','28','29','31','33','35'].includes(String(num))) {
+          resultBox.addClass('black');
+        } else if (String(num) === '0') {
+          resultBox.addClass('green');
+        }
+
+        resultsDiv.append(resultBox);
+      });
+    }
+
+    socket.on('resultsUpdateAovivo', (results) => {
+      displayResults(results.slice(0, 5));
+    });
+
+    // ===== GERENCIAMENTO DE MENSAGENS (mesmo socket) ===== //
+    socket.on('newMessage', function(data) {
+      const messageId = data?.id || `msg_${Date.now()}`;
+      const messageText = data?.text || data;
+
+      if (document.querySelector(`[data-message-id="${messageId}"]`)) return;
+
+      const messageDiv = document.createElement('div');
+      messageDiv.setAttribute('data-message-id', messageId);
+      messageDiv.className = 'alert-message';
+      messageDiv.innerHTML = messageText;
+      messageDiv.style.cssText = 'background: white; border: 2px solid #FFA500; border-radius: 10px; padding: 15px; margin: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s;';
+
+      let container = document.querySelector('.messages-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.className = 'messages-container';
+        container.style.cssText = 'position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 600px;';
+        document.body.appendChild(container);
+      }
+
+      container.appendChild(messageDiv);
+    });
+
+    socket.on('removeMessage', function(data) {
+      const messageId = data?.id || data;
+      const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+
+      if (messageElement) {
+        messageElement.style.animation = 'slideOut 0.3s';
+        setTimeout(() => messageElement.remove(), 300);
+      }
+    });
+
+    socket.on('clearAllMessages', function() {
+      const container = document.querySelector('.messages-container');
+      if (container) container.innerHTML = '';
+    });
+
+	window.addEventListener('pageshow', () => {
+	  clearSinal();
+	  socket.disconnect();
+	  socket.connect();
+	});
+
+	document.addEventListener('visibilitychange', () => {
+	  if (document.visibilityState === 'visible') {
+		clearSinal();
+		socket.disconnect();
+		socket.connect();
+	  }
+	});
+  </script>
+
+  <style>
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-20px); }
+    }
+    .alert-message {
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</body>
+</html>
+

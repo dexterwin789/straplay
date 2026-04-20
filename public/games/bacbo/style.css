@@ -1,0 +1,351 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  min-height: 100%;
+}
+
+body {
+  color: #fff;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('./public/img/bacbo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: -1;
+}
+
+.page-wrap {
+  width: min(1200px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 18px 0 24px;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.logo {
+  width: min(150px, 42vw);
+  height: auto;
+}
+
+.results {
+  margin: 18px auto;
+  padding: 15px;
+  max-width: 600px;
+  min-height: 97px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 15px;
+  border: 2px solid #ffd700;
+  position: relative;
+}
+
+.status-box {
+  margin-top: 10px;
+}
+
+.sinal-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.sinal-gerado {
+  width: min(380px, calc(100vw - 32px));
+  min-height: 56px;
+  border: 1px solid orange;
+  background-color: #1c1b1d;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+}
+
+.sinal-text {
+  font-size: 20px;
+  color: rgb(21, 255, 0);
+  margin: 0;
+  text-align: center;
+}
+
+.sinal-gale-container {
+  display: flex;
+  justify-content: space-between;
+  width: min(380px, calc(100vw - 32px));
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.sinal-div,
+.gale-div {
+  width: 100%;
+  border: 1px solid orange;
+  background-color: #1c1b1d;
+  border-radius: 15px;
+  padding: 12px;
+}
+
+.sinal-title,
+.gale-title {
+  font-size: 15px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+}
+
+.sinal-data,
+.gale-data {
+  font-size: 14px;
+  margin: 15px 0 0;
+  color: #20ff45;
+  text-align: center;
+  line-height: 1.45;
+}
+
+.gale-data {
+  font-size: 24px;
+}
+
+.gale-data-fixed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  font-size: 20px;
+}
+
+.loading-text {
+  font-size: 14px;
+}
+
+.loading-validada {
+  background: linear-gradient(45deg, #28a745, #20c997, #28a745);
+  background-size: 200% 200%;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+  animation: gradientShift 2s ease-in-out infinite;
+}
+
+.loading-analisando {
+  background: linear-gradient(45deg, #fd7e14, #ffc107, #fd7e14);
+  background-size: 200% 200%;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(253, 126, 20, 0.4);
+  animation: gradientShift 2s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.container-botao {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.botao-bonito {
+  width: min(340px, calc(100vw - 32px));
+  padding: 14px 24px;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(45deg, #34c620, #29f513);
+  border: 1px solid #53ff7b;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, opacity 0.3s;
+  animation: pulseButton 1.5s infinite;
+}
+
+.botao-bonito:hover {
+  transform: scale(1.05);
+}
+
+.botao-bonito:active {
+  animation: none;
+  transform: scale(0.97);
+}
+
+.botao-bonito:disabled {
+  background: rgba(0, 0, 0, 0.18);
+  color: #ffaf93;
+  border: 1px solid rgba(255, 175, 147, 0.55);
+  animation: none;
+  cursor: not-allowed;
+}
+
+@keyframes pulseButton {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.iframe-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.iframe {
+  border: 0;
+  border-radius: 15px;
+  width: min(1200px, 100%);
+  height: 1000px;
+  margin-bottom: 1em;
+  background: #fff;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 12px 30px;
+  position: relative;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+
+.guima-link {
+  color: #abfc4e;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.guima-link:hover {
+  text-decoration: underline;
+}
+
+.home-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  padding: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-button img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.home-button:hover {
+  border-color: #f0c420;
+  box-shadow: 0 0 15px rgba(240, 196, 32, 0.8);
+}
+
+.home-button:hover img {
+  filter: brightness(1.2);
+  transform: scale(1.1);
+}
+
+@media (max-width: 1024px) {
+  .iframe {
+    width: min(768px, 100%);
+    height: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  body::before {
+    background-image: url('./public/img/bacbo_mobile.jpg');
+  }
+
+  .page-wrap {
+    width: min(100%, calc(100% - 14px));
+    padding-top: 14px;
+  }
+
+	.sinal-gale-container {
+	  flex-direction: row;
+	  justify-content: space-between;
+	  align-items: stretch;
+	  width: min(380px, calc(100vw - 32px));
+	  gap: 12px;
+	}
+
+	.sinal-div,
+	.gale-div {
+	  width: calc(50% - 6px);
+	  padding: 10px;
+	}
+
+	.gale-data-fixed {
+	  min-height: 88px;
+	  font-size: 18px;
+	}
+
+  .iframe {
+    width: 360px;
+    max-width: 100%;
+    height: 600px;
+  }
+
+  .results {
+    max-width: 95%;
+    min-height: 84px;
+  }
+
+  .sinal-text {
+    font-size: 18px;
+  }
+
+  .gale-data {
+    font-size: 20px;
+  }
+
+  .gale-data-fixed {
+    min-height: auto;
+    font-size: 18px;
+  }
+}

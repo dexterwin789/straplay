@@ -1,0 +1,441 @@
+body {
+    font-family: Arial, sans-serif; /* Define a fonte para todo o corpo */
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove preenchimento padrão */
+    
+}
+
+/* Imagem de fundo */
+body::before {
+    content: ""; /* Cria um elemento vazio */
+    position: fixed; /* Fixa a imagem de fundo na tela */
+    top: 0; /* Posiciona no topo */
+    left: 0; /* Posiciona à esquerda */
+    right: 0; /* Posiciona à direita */
+    bottom: 0; /* Posiciona na parte inferior */
+    background-image: url('/aovivo/img/aovivo_esc.jpg'); /* Define a imagem de fundo */
+    background-size: cover; /* Cobre toda a área disponível */
+    background-position: center; /* Centraliza a imagem */
+    z-index: -1; /* Coloca a imagem de fundo atrás de todos os outros elementos */
+}
+
+
+
+
+/* Estilo da seção de resultados */
+.result-section {
+    background-color: #e2f0d9;
+    border: 2px solid #8bc34a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.result-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.results-container {
+    display: flex;
+    justify-content: center;
+}
+
+.result {
+    display: inline-block;
+    margin: 0 10px;
+    font-size: 18px;
+}
+
+
+
+
+
+
+
+
+
+.sinal-container {
+    position: relative; /* Garante que o z-index funcione */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    z-index: 1; /* Certifique-se de que o contêiner esteja acima da sobreposição */
+}
+
+.sinal-gerado {
+    width: 380px; /* Define a largura do contêiner */
+    height: 50px; /* Define a altura do contêiner */
+    border: 1px solid orange; /* Adiciona uma borda laranja */
+    background-color: #1c1b1d; /* Define a cor de fundo */
+    border-radius: 15px; /* Arredonda os cantos */
+    display: flex; /* Usa flexbox para layout interno */
+    align-items: center; /* Centraliza verticalmente os itens */
+    justify-content: center; /* Centraliza horizontalmente os itens */
+}
+
+.sinal-text {
+    font-size: 20px; /* Define o tamanho da fonte */
+    color: rgb(21, 255, 0); /* Define a cor do texto */
+    margin: 0; /* Remove margem padrão */
+}
+
+.sinal-gale-container {
+    display: flex; /* Usa flexbox para layout */
+    justify-content: space-between; /* Distribui espaço entre os itens */
+    width: 380px; /* Define a largura do contêiner */
+    margin-top: 20px; /* Adiciona margem superior */
+    gap: 30px; /* Adiciona espaço entre os itens */
+}
+
+.sinal-div,
+.gale-div {
+    width: 150px; /* Define a largura dos contêineres internos */
+    border: 1px solid orange; /* Adiciona uma borda laranja */
+    background-color: #1c1b1d; /* Define a cor de fundo */
+    border-radius: 15px; /* Arredonda os cantos */
+    padding: 10px; /* Adiciona preenchimento interno */
+}
+
+.sinal-title,
+.gale-title {
+    font-size: 15px; /* Define o tamanho da fonte */
+    color: rgb(255, 255, 255); /* Define a cor do texto */
+    margin: 0; /* Remove margem padrão */
+    text-align: center; /* Centraliza o texto */
+}
+
+.sinal-data,
+.gale-data {
+    font-size: 14px; /* Define o tamanho da fonte */
+    margin: 15px 0; /* Adiciona margem vertical */
+    color: #20ff45; /* Define a cor do texto */
+    text-align: center; /* Centraliza o texto */
+}
+
+.gale-data {
+    font-size: 25px; /* Define um tamanho de fonte maior para os dados de Gale */
+}
+
+.logo-container {
+    display: flex; /* Usa flexbox para layout */
+    justify-content: center; /* Centraliza o conteúdo */
+    margin-top: 20px; /* Adiciona margem superior */
+}
+
+.logo {
+    width: 20%; /* Ajuste conforme necessário */
+    max-width: 150px; /* Limite a largura máxima */
+    height: auto; /* Mantém a proporção da imagem */
+}
+
+/* Estilos para mensagens de carregamento */
+#loadingMessage {
+    margin-top: 20px; /* Margem superior para a mensagem de carregamento */
+}
+
+.analyzing {
+    color: #ff9900; /* Cor laranja para "ANALISANDO SINAIS ..." */
+    animation: pulse 1.5s infinite; /* Animação de pulsar */
+}
+
+.valid {
+    color: #4CAF50; /* Verde para "SINAL VÁLIDADO" */
+    animation: fadeIn 1s; /* Animação de aparecimento */
+}
+
+/* Animações */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 768px) {
+    body::before {
+        background-image: url('/aovivo/img/aovivo_mobile.jpg'); /* Altera a imagem de fundo para dispositivos móveis */
+    }
+}
+
+/* Estilo do rodapé */
+.footer {
+    text-align: center;
+    padding: 30px;
+    position: relative; /* Para que o z-index funcione */
+    z-index: 2; /* Mantém acima da sobreposição */
+    color: rgba(255, 255, 255, 0.493); /* Cor do texto do rodapé */
+    font-size: 12px; /* Tamanho do texto do rodapé */
+}
+
+.guima-link {
+    color: #abfc4ef1; /* Cor do link */
+    font-size: 12px; /* Tamanho do link */
+    text-decoration: none;
+}
+
+.guima-link:hover {
+    text-decoration: underline;
+}
+
+#messages {
+    margin-top: 20px;
+    padding: 0;
+    list-style-type: none;
+    text-align: left;
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid orange;
+    z-index: 2;
+    border-radius: 15px;
+    box-shadow: 0 0 8px 3px rgba(255, 165, 0, 0.5);
+    background-color: #f9f9f9;
+}
+
+#messages li {
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+#messages li:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}
+
+.ultimosnumeros {
+    text-align: center;          /* Centraliza o texto */
+    color: rgb(253, 238, 25);               /* Define a cor do texto como verde */
+    font-family: 'Arial', sans-serif; /* Fonte Arial ou fonte sans-serif como alternativa */
+    font-size: 14px;            /* Tamanho da fonte 15px */
+        /* Deixa o texto em negrito */
+    margin: 10px 0;            /* Espaçamento vertical de 10px acima e abaixo */
+    padding: 2px;              /* Espaçamento interno de 5px */
+    border-radius: 5px;        /* Opcional: cantos arredondados */
+
+}
+
+/*RESULTADOS*/
+
+/* Estilo dos resultados */
+.results {
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 2;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.result-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    font-size: 1.5em;
+    color: #fff;
+    position: relative;
+}
+
+.red {
+    background-color: red;
+}
+
+.black {
+    background-color: #343a40;
+}
+
+.green {
+    background-color: #31d0aa;
+}
+
+/* Estilo da lista de mensagens */
+#messages {
+    margin-top: 20px;
+    padding: 0;
+    list-style-type: none;
+    text-align: left;
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid orange;
+    border-radius: 15px;
+    box-shadow: 0 0 8px 3px rgba(255, 165, 0, 0.5);
+    background-color: #f9f9f9;
+}
+
+#messages li {
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+#messages li:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}
+
+/* Efeito de brilho para o novo número */
+.new-result {
+    animation: glow 5s forwards;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px 2px rgba(86, 243, 80, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 5px 2px rgb(98, 247, 53);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+.glow {
+    animation: borderGlow 5s forwards;
+}
+
+/*ANIMAÇÃO DOS TEXTOS VERIFICANDO */
+
+.loading-text {
+    font-size: 14px; /* Tamanho da fonte */
+    font-family: 'Arial', sans-serif; /* Fonte bonita */
+}
+
+/* Cor verde para "PLATAFORMA VALIDADA" */
+.loading-validada {
+    color: rgb(88, 184, 223); /* Cor verde */
+    animation: loadingAnimation 1.5s infinite; /* Animação */
+}
+
+/* Cor laranja para "ANALISANDO PLATAFORMA" */
+.loading-analisando {
+    color: orange; /* Cor laranja */
+    animation: loadingAnimation 1.5s infinite; /* Animação */
+}
+
+/* Efeito de loading */
+@keyframes loadingAnimation {
+    0% {
+        opacity: 1; /* Começa opaco */
+    }
+    50% {
+        opacity: 0.5; /* Meio opaco */
+    }
+    100% {
+        opacity: 1; /* Retorna ao estado opaco */
+    }
+}
+
+/* CSS IFRAME CASA DE APOSTA*/
+
+/*Iframe afiliado*/
+.iframe {
+    border-radius: 15px; 
+	align-items: center;
+	align-content: center;
+	/*margin-left: calc(50% - 200px);*/
+    margin-bottom: 1em;
+    margin-left: calc(50% - 600px);
+    width: 1200px;
+    height: 1000px;
+}
+
+@media (max-width: 1024px){
+    .iframe{
+        margin-left: calc(50% - 384px);
+        width: 768px;
+        height: 800px; 
+    }
+}
+
+@media (max-width: 768px){
+    .iframe{
+        margin-left: calc(50% - 180px);
+        width: 360px;
+        height:600px; 
+    }
+}
+
+/* Estilo do contêiner do botão */
+.container-botao {
+    text-align: center; /* Centraliza o conteúdo dentro do contêiner */
+    margin-top: 20px; /* Espaço entre o iframe e o botão */
+}
+
+/* Estilo do botão */
+.botao-bonito {
+    padding: 12px 24px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #00cc1b; /* Verde abacate */
+    border: none;
+    border-radius: 5px; /* Cantos arredondados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra */
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s; /* Efeito de transição */
+}
+
+/* Efeito hover no botão */
+.botao-bonito:hover {
+    background-color: #8fbc8f; /* Cor ao passar o mouse */
+    transform: scale(1.05); /* Leve aumento no tamanho */
+}
+
+
+
+
+/* Estilos para o botão da imagem home */
+.home-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 50%; /* Arredondar o botão */
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-button img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Arredondar a imagem */
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+/* Efeito de hover no botão */
+.home-button:hover {
+    border-color: #f0c420;
+    box-shadow: 0 0 15px rgba(240, 196, 32, 0.8);
+}
+
+/* Efeito de hover na imagem */
+.home-button:hover img {
+    filter: brightness(1.2);
+    transform: scale(1.1);
+}
