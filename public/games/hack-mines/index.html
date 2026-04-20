@@ -32,28 +32,14 @@ html, body {
     /*background-image: url(/images/hack-mines/backgroundmouse.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-                bottom: -10%;
-                height: 110%;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 100%
-}
+    min-height:100vh;}
 
 @media (max-width: 768px){
     body{
         /*background-image: url(/images/hack-mines/backgroundmouse.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-                bottom: -10%;
-                height: 110%;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 100%
-    }
+        min-height:100vh;}
 }
 
 p{
@@ -198,13 +184,13 @@ p{
 /*Iframe afiliado*/
 #iframe {
     display: block;
-    margin: 1em auto;
+    margin:1em auto 3em auto;
     width: 1140px;
     max-width: 100%;
     height: 700px;
     border: 0;
     border-radius: 15px;
-    overflow: hidden;
+    
     background: #000;
 }
 
@@ -267,11 +253,30 @@ p{
     transform: scale(1.1);
 }
 </style>
+<style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style>
 
 <!-- HFCM by 99 Robots - Snippet # 2: notificacoes -->
 <script src="js/wp-emoji-release.min.js" defer=""></script>
 
 
+<style id="mines-styles">
+.mines-container{background:rgba(0,30,60,.95);border-radius:12px;padding:20px;max-width:400px;margin:80px auto 50px auto;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.mines-header{display:flex;justify-content:center;margin-bottom:10px;color:#fff;font-size:18px}
+.mines-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:20px 0 10px 0}
+.mine-cell{width:100%;aspect-ratio:1;background-color:rgba(0,0,0,.25);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:default;position:relative;border:2px solid transparent;transition:all .6s ease}
+.mine-cell .circle{width:70%;height:70%;border-radius:50%;background-color:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;font-size:1.5em;position:relative;z-index:1}
+.mine-cell.revealed-mine .circle{color:#fff}
+.mine-cell.revealed-mine .circle::after{content:'💣';font-size:1.3em;display:block;line-height:1;color:#fff}
+.mine-cell.revealed-mine{border:2px solid #00cc66;background-color:rgba(0,0,0,.4)}
+.mines-config{margin:15px 0 10px 0;text-align:center}
+.mines-config label{color:#fff;font-size:16px;display:inline-flex;align-items:center;gap:10px}
+#minesCount{background:rgba(0,0,0,.3);border:2px solid #00cc66;border-radius:6px;color:#fff;padding:8px 12px;font-size:16px;outline:none;margin-left:5px}
+.bet-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:10px}
+.btn-bet{background-color:#00cc66;color:#fff;border:none;padding:12px 30px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:18px;transition:all .25s;flex-grow:1;max-width:240px}
+.btn-bet:hover:not(:disabled){background:#00994d;transform:scale(1.05)}
+.btn-bet:disabled{opacity:.7;cursor:not-allowed}
+@media(max-width:480px){.mines-container{max-width:92vw;padding:14px}.mines-grid{gap:6px}}
+</style>
 <body class="page-template page-template-elementor_header_footer page page-id-3085 wp-custom-logo e-lazyload elementor-default elementor-template-full-width elementor-kit-5 elementor-page elementor-page-3085"><div class="elementor-element elementor-element-39405d3d elementor-widget elementor-widget-html" data-id="39405d3d" data-element_type="widget" data-widget_type="html.default">
 
     <!-- Botão Home no canto superior direito -->
@@ -337,7 +342,7 @@ p{
         audio.currentTime = 0;
         // Reinicia o áudio para o início
         audio.play();
-        // Inicia a reproduï¿½ï¿½o
+        // Inicia a reprodu--o
     });
 </script>
 
@@ -875,7 +880,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Exibe a mensagem
   function showSinalMsg() {
-    sinalMsg.textContent = "Realizar atÃ© 4 jogadas com o mesmo sinal!";
+    sinalMsg.textContent = "Realizar até 4 jogadas com o mesmo sinal!";
     sinalMsg.style.display = "block";
   }
 
@@ -918,28 +923,115 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-</div><!-- Notiflix ganhadores -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notiflix/3.2.7/notiflix-3.2.7.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/notiflix/3.2.7/notiflix-aio-3.2.7.min.js"></script>
+</div>
+<style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px}}</style>
+<!-- Pure-JS toast notifications (no CDN) -->
+<style>
+.vnb-toast{position:fixed;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:14px 22px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2147483647;font-family:Arial,sans-serif;font-size:14px;max-width:92vw;border:1px solid rgba(255,255,255,.2);transition:top .35s ease,opacity .35s ease;opacity:0;top:-80px;pointer-events:auto}
+.vnb-toast.show{opacity:1;top:18px}
+.vnb-toast strong{color:#fff;font-weight:700}
+</style>
 <script>
 (function(){
-  var nomes=['Jose','Joao','Antonio','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Mateus','Andre','Fernando','Fabio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Jorge','Alexandre','Roberto','Diego','Vitor','Sergio','Matheus','Thiago','Adriano','Luciano','Julio','Renato','Alex','Vinicius','Rogerio','Samuel','Ronaldo','Mario','Flavio','Douglas','Igor','Davi','Maria','Ana','Juliana','Marcia','Fernanda','Patricia','Aline','Sandra','Camila','Amanda','Bruna','Jessica','Leticia','Julia','Luciana','Vanessa','Mariana','Gabriela','Vitoria','Larissa','Claudia','Beatriz','Rita','Luana','Sonia','Renata','Eliane'];
-  var sobre=['A.','B.','C.','D.','F.','G.','L.','M.','N.','P.','R.','S.','V.'];
-  var produto='MINES';
-  function valor(){ return 'R$ '+(Math.random()*4800+200).toFixed(2).replace('.',','); }
-  function boot(){
-    if(typeof Notiflix==='undefined'){ return setTimeout(boot,500); }
-    Notiflix.Notify.init({position:'center-top',cssAnimationStyle:'from-top',plainText:false,timeout:4000,distance:'12px',clickToClose:true});
-    function show(){
-      var n=nomes[Math.floor(Math.random()*nomes.length)]+' '+sobre[Math.floor(Math.random()*sobre.length)];
-      Notiflix.Notify.success('<strong>'+n+'</strong> ganhou <strong>'+valor()+'</strong> no <strong>'+produto+'</strong>');
-      setTimeout(show,(Math.floor(Math.random()*25)+8)*1000);
-    }
-    setTimeout(show,1500);
+  if(window.__vnbToast)return;window.__vnbToast=1;
+  var NOMES=['José','João','Antonio','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Mateus','André','Fernando','Fábio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Jorge','Alexandre','Roberto','Diego','Vitor','Sérgio','Matheus','Thiago','Adriano','Luciano','Júlio','Renato','Alex','Vinícius','Rogério','Samuel','Ronaldo','Mário','Flávio','Douglas','Igor','Davi','Maria','Ana','Juliana','Márcia','Fernanda','Patrícia','Aline','Sandra','Camila','Amanda','Bruna','Jéssica','Letícia','Júlia','Luciana','Vanessa','Mariana','Gabriela','Vitória','Larissa','Cláudia','Beatriz','Rita','Luana','Sônia','Renata','Eliane'];
+  var SOBRE=['A.','B.','C.','D.','F.','G.','L.','M.','N.','P.','R.','S.','V.'];
+  var PRODUTO='MINES';
+  function valor(){return 'R$ '+(Math.random()*4800+200).toFixed(2).replace('.',',');}
+  function show(){
+    var t=document.createElement('div');t.className='vnb-toast';
+    var n=NOMES[Math.floor(Math.random()*NOMES.length)]+' '+SOBRE[Math.floor(Math.random()*SOBRE.length)];
+    t.innerHTML='<strong>'+n+'</strong> ganhou <strong>'+valor()+'</strong> no <strong>'+PRODUTO+'</strong>';
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){t.classList.add('show');});
+    setTimeout(function(){t.style.opacity='0';t.style.top='-80px';setTimeout(function(){t.remove();},400);},4200);
   }
-  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',boot); } else { boot(); }
+  function loop(){show();setTimeout(loop,(Math.floor(Math.random()*22)+7)*1000);}
+  function start(){setTimeout(loop,1500);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
 })();
 </script>
-<style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px}}</style>
+<!-- /toast -->
+<style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px;width:95vw!important}}</style>
+
+<!-- Pure-JS toast notifications (no CDN) -->
+<style>
+.vnb-toast{position:fixed;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:14px 22px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2147483647;font-family:Arial,sans-serif;font-size:14px;max-width:92vw;border:1px solid rgba(255,255,255,.2);transition:top .35s ease,opacity .35s ease;opacity:0;top:-80px;pointer-events:auto}
+.vnb-toast.show{opacity:1;top:18px}
+.vnb-toast strong{color:#fff;font-weight:700}
+</style>
+<script>
+(function(){
+  if(window.__vnbToast)return;window.__vnbToast=1;
+  var NOMES=['José','João','Antonio','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Mateus','André','Fernando','Fábio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Jorge','Alexandre','Roberto','Diego','Vitor','Sérgio','Matheus','Thiago','Adriano','Luciano','Júlio','Renato','Alex','Vinícius','Rogério','Samuel','Ronaldo','Mário','Flávio','Douglas','Igor','Davi','Maria','Ana','Juliana','Márcia','Fernanda','Patrícia','Aline','Sandra','Camila','Amanda','Bruna','Jéssica','Letícia','Júlia','Luciana','Vanessa','Mariana','Gabriela','Vitória','Larissa','Cláudia','Beatriz','Rita','Luana','Sônia','Renata','Eliane'];
+  var SOBRE=['A.','B.','C.','D.','F.','G.','L.','M.','N.','P.','R.','S.','V.'];
+  var PRODUTO='MINES';
+  function valor(){return 'R$ '+(Math.random()*4800+200).toFixed(2).replace('.',',');}
+  function show(){
+    var t=document.createElement('div');t.className='vnb-toast';
+    var n=NOMES[Math.floor(Math.random()*NOMES.length)]+' '+SOBRE[Math.floor(Math.random()*SOBRE.length)];
+    t.innerHTML='<strong>'+n+'</strong> ganhou <strong>'+valor()+'</strong> no <strong>'+PRODUTO+'</strong>';
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){t.classList.add('show');});
+    setTimeout(function(){t.style.opacity='0';t.style.top='-80px';setTimeout(function(){t.remove();},400);},4200);
+  }
+  function loop(){show();setTimeout(loop,(Math.floor(Math.random()*22)+7)*1000);}
+  function start(){setTimeout(loop,1500);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
+})();
+</script>
+<!-- /toast -->
+<style id="responsive-iframe-height">@media(max-width:600px){#iframe{height:520px;width:95vw!important}}</style>
+<script id="mines-logic">
+(function(){
+  var grid=document.querySelector('.mines-grid');
+  var sel=document.getElementById('minesCount');
+  var btn=document.getElementById('placeBet');
+  var msg=document.getElementById('sinal-msg');
+  if(!grid||!sel||!btn) return;
+  var minesLocations=[];
+  var minesCount=parseInt(sel.value,10)||3;
+  function build(){
+    grid.innerHTML='';
+    for(var i=0;i<25;i++){
+      var c=document.createElement('div');c.className='mine-cell';c.dataset.index=i;
+      var ci=document.createElement('div');ci.className='circle';
+      c.appendChild(ci);grid.appendChild(c);
+    }
+  }
+  function reset(){
+    document.querySelectorAll('.mine-cell').forEach(function(c){c.classList.remove('revealed-mine');});
+    minesLocations=[];
+  }
+  function reveal(){
+    minesLocations.forEach(function(idx){
+      var c=document.querySelector('.mine-cell[data-index="'+idx+'"]');
+      if(c) c.classList.add('revealed-mine');
+    });
+  }
+  function startGame(){
+    reset();
+    minesCount=parseInt(sel.value,10)||3;
+    var total=Math.min(Math.max(minesCount,1),24);
+    while(minesLocations.length<total){
+      var p=Math.floor(Math.random()*25);
+      if(minesLocations.indexOf(p)===-1) minesLocations.push(p);
+    }
+    reveal();
+  }
+  function countdown(s){
+    btn.disabled=true;btn.textContent='Aguarde ('+s+'s)';
+    if(msg){msg.textContent='Realizar até 4 jogadas com o mesmo sinal!';msg.style.display='block';}
+    var rem=s;var iv=setInterval(function(){
+      rem--;
+      if(rem<=0){clearInterval(iv);btn.disabled=false;btn.textContent='GERAR SINAL';if(msg)msg.style.display='none';reset();}
+      else{btn.textContent='Aguarde ('+rem+'s)';}
+    },1000);
+  }
+  build();
+  btn.addEventListener('click',function(){if(!btn.disabled){startGame();countdown(20);}});
+  sel.addEventListener('change',function(){minesCount=parseInt(this.value,10)||3;});
+})();
+</script>
 </body>
 </html>
