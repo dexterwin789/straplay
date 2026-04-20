@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StraPlay - Jogo</title>
+  <link rel="icon" href="/img/logo_straplay.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/game.css">
+</head>
+<body class="game-page">
+
+<header class="game-header">
+  <a href="/" class="game-back" title="Voltar">
+    <img src="/img/logo_straplay.png" alt="StraPlay">
+  </a>
+  <div class="game-title" id="gameTitle">Carregando...</div>
+  <a href="/" class="game-home" aria-label="Início">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/></svg>
+  </a>
+</header>
+
+<section class="signal-panel">
+  <div class="signal-inner">
+    <div class="signal-logo"><img src="/img/logo_straplay.png" alt="StraPlay"></div>
+
+    <div class="signal-numbers" id="lastNumbers">
+      <span class="num">-</span><span class="num">-</span><span class="num">-</span><span class="num">-</span><span class="num">-</span>
+    </div>
+
+    <div class="signal-status" id="signalStatus">
+      <span class="pulse"></span><span id="signalStatusText">BUSCANDO SINAIS...</span>
+    </div>
+
+    <div class="signal-entry" id="signalEntry">- - -</div>
+
+    <div class="signal-boxes">
+      <div class="signal-box">
+        <div class="signal-box-label">Sinal</div>
+        <div class="signal-box-value" id="signalValue">- - -</div>
+      </div>
+      <div class="signal-box">
+        <div class="signal-box-label">Proteção</div>
+        <div class="signal-box-value" id="signalProtection">- - -</div>
+      </div>
+    </div>
+
+    <div class="signal-countdown" id="signalCountdown">AGUARDE -</div>
+  </div>
+</section>
+
+<section class="iframe-wrap">
+  <div class="iframe-loader" id="iframeLoader">Carregando VemnaBet...</div>
+  <iframe id="betFrame" src="" title="VemnaBet" allow="payment *; clipboard-write" allowfullscreen></iframe>
+</section>
+
+<script src="/js/signals.js"></script>
+</body>
+</html>
