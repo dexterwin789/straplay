@@ -298,7 +298,9 @@ body::after {
 
 @media (max-width: 768px) {
   body::before {
-    background-image: url('./public/img/bacbo_mobile.jpg');
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center center;
   }
 
   .page-wrap {

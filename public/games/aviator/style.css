@@ -11,11 +11,20 @@
 
 body {
   margin: 0;
-  background: #0b0b0b url('./public/img/Bglight.jpg') center/cover fixed;
+  background: #0b0b0b url('./public/img/Bglight.jpg') center center / cover no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
   font-family: Arial, sans-serif;
   color: #fff;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center center;
+  }
 }
 
 body::before {

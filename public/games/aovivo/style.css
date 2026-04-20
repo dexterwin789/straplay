@@ -163,10 +163,12 @@ body::before {
     to { opacity: 1; }
 }
 
-/* Estilos para dispositivos mÃ³veis */
+/* Estilos para dispositivos moveis: usa mesmo bg do desktop (arquivo _mobile nao existe) */
 @media (max-width: 768px) {
     body::before {
-        background-image: url('/aovivo/img/aovivo_mobile.jpg'); /* Altera a imagem de fundo para dispositivos mÃ³veis */
+        background-attachment: scroll;
+        background-size: cover;
+        background-position: center center;
     }
 }
 
