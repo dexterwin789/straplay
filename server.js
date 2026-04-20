@@ -4,7 +4,23 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
+// Headers applied to every HTML/static response so Cloudflare never caches HTML
+function setNoStore(res, filePath) {
+  if (!filePath || /\.(html)$/i.test(filePath)) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('CDN-Cache-Control', 'no-store');
+    res.set('Cloudflare-CDN-Cache-Control', 'no-store');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+}
+
+app.use(express.static(path.join(__dirname, 'public'), {
+  extensions: ['html'],
+  setHeaders: setNoStore,
+  etag: false,
+  lastModified: false
+}));
 
 // Slug -> VemnaBet game code
 const GAMES = {
@@ -35,7 +51,13 @@ app.use((req, res, next) => {
 app.get('/game/:slug', (req, res) => {
   const cfg = GAMES[req.params.slug];
   if (!cfg) return res.redirect('/');
-  res.sendFile(path.join(__dirname, 'public', 'games', req.params.slug, 'index.html'));
+  setNoStore(res, 'x.html');
+  res.sendFile(path.join(__dirname, 'public', 'games', req.params.slug, 'index.html'), {
+    cacheControl: false,
+    etag: false,
+    lastModified: false,
+    headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate, private' }
+  });
 });
 
 app.get('/api/game/:slug', (req, res) => {
