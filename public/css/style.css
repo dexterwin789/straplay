@@ -143,7 +143,8 @@ body {
 @media (max-width: 767px) {
   .btn-image.mobile { display: block; }
   .btn-image.desktop { display: none; }
-  .image-container { flex: 1 1 45%; text-align: center; }
+  /* keep each item at fixed width so 1/2/3 items stay the same size as the 4-item layout */
+  .image-container { flex: 0 0 45%; max-width: 45%; text-align: center; }
   .image-container img { width: 100%; max-width: 200px; }
 }
 
