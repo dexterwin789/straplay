@@ -93,6 +93,17 @@
   if (urlRef) saveRef(urlRef);
   var ref = urlRef || loadRef();
 
+  // Fallback: cookie set by cassino /r/<token> redirect (camouflaged flow)
+  if (!ref) {
+    try {
+      var m = document.cookie.match(/(?:^|;\s*)vnb_ref=([^;]+)/);
+      if (m) {
+        var c = decodeURIComponent(m[1]);
+        if (/^[A-Za-z0-9_-]{1,64}$/.test(c)) { ref = c; saveRef(c); }
+      }
+    } catch (e) {}
+  }
+
   // Expose for other scripts
   window.VNB_REF = ref || null;
 
