@@ -56,6 +56,21 @@
       img.setAttribute('src', slot.image_url);
       if (slot.title) img.setAttribute('alt', slot.title);
     });
+
+    // Render optional title ABOVE the image (idempotent).
+    var titleEl = container.querySelector('.useful-title');
+    var titleTxt = (slot.title || '').toString().trim();
+    if (titleTxt) {
+      if (!titleEl) {
+        titleEl = document.createElement('div');
+        titleEl.className = 'useful-title';
+        container.insertBefore(titleEl, container.firstChild);
+      }
+      titleEl.textContent = titleTxt;
+    } else if (titleEl) {
+      titleEl.remove();
+    }
+
     container.style.display = '';
     if (slot.target_url) {
       container.style.cursor = 'pointer';
