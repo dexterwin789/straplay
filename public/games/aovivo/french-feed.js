@@ -4,7 +4,7 @@
   'use strict';
 
   var listeners = {};
-  var refreshMs = 30000;
+  var refreshMs = 10000;
 
   window.io = function () {
     return {
@@ -73,7 +73,7 @@
       sinalgerado: 'ENTRADA POR NUMEROS',
       tipo: 'Numeros:',
       msg: signal.join(' - '),
-      protecao: payload.msg || 'Somente numeros reais do provedor',
+      protecao: payload.msg || 'Sinal ativo da French Roulette',
       gales: String(stats.hit_rate || 0) + '%'
     });
   }

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VemNaBet - French Roulette</title>
   <link rel="icon" href="/favicon.png" type="image/png">
-  <script src="/games/aovivo/french-feed.js?v=20260428b"></script>
+  <script src="/games/aovivo/french-feed.js?v=20260428c"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="/games/aovivo/style.css?v=20260428b">
+  <link rel="stylesheet" href="/games/aovivo/style.css?v=20260428c">
 <style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style>
 <style id="__VNB_HIDE_SCROLLBAR__">html,body{scrollbar-width:none!important;-ms-overflow-style:none!important}html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!important;height:0!important;display:none!important;background:transparent!important}body{-webkit-overflow-scrolling:touch}iframe{scrollbar-width:none}</style><style id="__VNB_IFRAME_FIX__">#iframe{margin:1em auto 3em auto!important;display:block;border:0;border-radius:15px;background:#000}body>div:last-of-type{margin-bottom:2em}</style>  <script src="/js/ref-tracker.js?v=20260420d"></script>
 </head>
@@ -56,8 +56,38 @@
   </div>
 
   <div>
-    <iframe class="iframe" src="https://vemnabet.bet/game/oficial-pragmatic-live-pp-28401" id="iframe" frameborder="0" allowfullscreen></iframe>
+    <iframe class="iframe" src="about:blank" data-base-src="https://vemnabet.bet/game/oficial-pragmatic-live-pp-28401?embed=1&amp;autoplay=1" id="iframe" frameborder="0" allow="autoplay; fullscreen; clipboard-read; clipboard-write" referrerpolicy="origin-when-cross-origin" allowfullscreen></iframe>
   </div>
+
+  <script>
+    (function () {
+      var frame = document.getElementById('iframe');
+      if (!frame) return;
+
+      function storedRef() {
+        try {
+          var fromUrl = new URLSearchParams(window.location.search).get('ref');
+          if (fromUrl) return fromUrl;
+        } catch (e) {}
+        if (window.VNB_REF) return window.VNB_REF;
+        try {
+          var raw = localStorage.getItem('vnb_ref');
+          var parsed = raw ? JSON.parse(raw) : null;
+          if (parsed && parsed.ref) return parsed.ref;
+        } catch (e) {}
+        try {
+          var match = document.cookie.match(/(?:^|;\s*)vnb_ref=([^;]+)/);
+          if (match) return decodeURIComponent(match[1]);
+        } catch (e) {}
+        return '';
+      }
+
+      var target = new URL(frame.getAttribute('data-base-src'));
+      var ref = storedRef();
+      if (ref && !target.searchParams.get('ref')) target.searchParams.set('ref', ref);
+      frame.src = target.toString();
+    })();
+  </script>
 
   <footer class="footer">
     © 2024 - VemNaBet
@@ -247,7 +277,7 @@
       $('#sinalDados').text('- - -');
       $('#protecaoDados').text('- - -');
       $('#galeDados').html('- - -');
-      $('#loadingText').text(message || 'Aguardando jogadas reais').removeClass('loading-validada').addClass('loading-analisando');
+      $('#loadingText').text(message || 'Buscando sinais...').removeClass('loading-validada').addClass('loading-analisando');
     });
 
     // ===== GERENCIAMENTO DE MENSAGENS (mesmo socket) ===== //
