@@ -44,7 +44,12 @@
 
     var history = payload.history || [];
     var stats = payload.stats || {};
-    var money = moneyStats(history);
+    var computedMoney = moneyStats(history);
+    var money = {
+      gains_cents: Number.isFinite(Number(stats.gains_cents)) ? Number(stats.gains_cents) : computedMoney.gains_cents,
+      losses_cents: Number.isFinite(Number(stats.losses_cents)) ? Number(stats.losses_cents) : computedMoney.losses_cents,
+      net_cents: Number.isFinite(Number(stats.net_cents)) ? Number(stats.net_cents) : computedMoney.net_cents
+    };
     var numbers = numberList(history).slice(0, 5);
     var signal = (payload.current_signal || []).map(String);
 

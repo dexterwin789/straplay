@@ -13,9 +13,9 @@ body::before {
     left: 0; /* Posiciona Ã  esquerda */
     right: 0; /* Posiciona Ã  direita */
     bottom: 0; /* Posiciona na parte inferior */
-    background-image: url('./img/aovivo_esc.jpg'); /* Define a imagem de fundo */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0.72)), url('./img/french-roulette-live-bg.png'); /* Define a imagem de fundo */
     background-size: cover; /* Cobre toda a Ã¡rea disponÃ­vel */
-    background-position: center; /* Centraliza a imagem */
+    background-position: center top; /* Centraliza a imagem */
     z-index: -1; /* Coloca a imagem de fundo atrÃ¡s de todos os outros elementos */
 }
 
