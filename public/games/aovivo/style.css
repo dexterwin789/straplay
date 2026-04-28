@@ -230,6 +230,47 @@ body::before {
 
 }
 
+.fr-stats {
+    width: min(620px, calc(100% - 24px));
+    margin: 12px auto 8px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.fr-stat {
+    border: 1px solid orange;
+    background: rgba(28, 27, 29, 0.92);
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+}
+
+.fr-stat span {
+    display: block;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.fr-stat strong {
+    color: #20ff45;
+    font-size: 17px;
+    line-height: 1.1;
+}
+
+.fr-stat-red strong { color: #ff4d4d; }
+.fr-stat-green strong { color: #20ff45; }
+
+@media (max-width: 640px) {
+    .fr-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 /*RESULTADOS*/
 
 /* Estilo dos resultados */

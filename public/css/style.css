@@ -63,7 +63,7 @@ body {
   justify-content: center;
   gap: 8px;
 }
-.titulo-final h4 { font-size: 12px; }
+.titulo-final h4 { font-size: 18px; }
 .logo-cards { vertical-align: middle; }
 
 /* ===== CARROSSEL ===== */
@@ -144,8 +144,8 @@ body {
 /* Optional title rendered above each banner (affiliate-set). */
 .useful-title {
   font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 800;
   color: #fff;
   text-align: center;
   margin: 0 0 8px 0;
@@ -163,7 +163,7 @@ body {
   /* keep each item at fixed width so 1/2/3 items stay the same size as the 4-item layout */
   .image-container { flex: 0 0 45%; max-width: 45%; text-align: center; }
   .image-container img { width: 100%; max-width: 200px; }
-  .useful-title { font-size: 12px; margin-bottom: 6px; }
+  .useful-title { font-size: 15px; margin-bottom: 7px; }
 }
 
 /* ===== BOTÃO MAIS JOGOS ===== */

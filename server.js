@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const http = require('http');
 const https = require('https');
 const { signRef, verifyRef } = require('./refToken');
 
@@ -93,6 +94,37 @@ app.get('/r/:token', (req, res) => {
   return res.redirect(302, '/');
 });
 
+function proxyCassinoJson(pathname, res) {
+  const target = new URL(pathname, CASSINO_BASE);
+  const client = target.protocol === 'http:' ? http : https;
+  let done = false;
+  function finish(status, payload) {
+    if (done) return;
+    done = true;
+    if (typeof payload === 'string') return res.status(status).type('application/json').send(payload || '{}');
+    return res.status(status).json(payload);
+  }
+  const req = client.get(target, { timeout: 5000, headers: { 'Accept': 'application/json' } }, (upstream) => {
+    let body = '';
+    upstream.on('data', (chunk) => {
+      body += chunk;
+      if (body.length > 1024 * 1024) req.destroy();
+    });
+    upstream.on('end', () => {
+      finish(upstream.statusCode || 502, body || '{}');
+    });
+  });
+  req.on('error', () => finish(502, { ok: false, msg: 'Nao foi possivel consultar o VemNaBet agora.' }));
+  req.on('timeout', () => {
+    req.destroy();
+    finish(504, { ok: false, msg: 'Tempo esgotado ao consultar o VemNaBet.' });
+  });
+}
+
+app.get('/api/roulette/french/signals', (_, res) => {
+  proxyCassinoJson('/api/roulette/french/signals', res);
+});
+
 // Headers applied to every HTML/static response so Cloudflare never caches HTML
 function setNoStore(res, filePath) {
   if (!filePath || /\.(html)$/i.test(filePath)) {
@@ -122,7 +154,7 @@ const GAMES = {
   'hack-mines':          { title: 'Hack Mines',            vemna: 'mines-pro' },
   'aviator':             { title: 'Aviator',               vemna: 'aviator' },
   'bacbo':               { title: 'Bac Bo',                vemna: 'golden-wealth-baccarat' },
-  'aovivo':              { title: 'Roleta Ao Vivo',        vemna: 'crazy-time' },
+  'aovivo':              { title: 'French Roulette',       vemna: 'oficial-pragmatic-live-pp-28401' },
   'xxxtreme':            { title: 'XXXTreme Lightning Roulette', vemna: 'lightning-roulette' }
 };
 

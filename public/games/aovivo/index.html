@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VemNaBet - Ao Vivo</title>
+  <title>VemNaBet - French Roulette</title>
   <link rel="icon" href="/favicon.png" type="image/png">
-  <script src="/games/aovivo/local-feed.js"></script>
+  <script src="/games/aovivo/french-feed.js?v=20260428a"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="stylesheet" href="/games/aovivo/style.css">
 <style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style>
@@ -19,10 +19,17 @@
   </div>
 
   <div class="logo-container">
-    <img src="/games/aovivo/img/Design.png" alt="Logo Xtreme" class="logo">
+    <img src="/games/aovivo/img/Design.png" alt="French Roulette" class="logo">
   </div>
 
-  <div class='ultimosnumeros'>Últimos Números</div>
+  <div class="fr-stats" id="frStats">
+    <div class="fr-stat fr-stat-green"><span>Greens</span><strong id="statGreens">0</strong></div>
+    <div class="fr-stat fr-stat-red"><span>Reds</span><strong id="statReds">0</strong></div>
+    <div class="fr-stat"><span>Ganhos</span><strong id="statGains">R$ 0,00</strong></div>
+    <div class="fr-stat"><span>Perdas</span><strong id="statLosses">R$ 0,00</strong></div>
+  </div>
+
+  <div class='ultimosnumeros'>Últimos Números French Roulette</div>
   <div id="results" class="results">Carregando resultados...</div>
 
   <div id="loadingMessage" class="sinal-container">
@@ -42,14 +49,14 @@
       </div>
 
       <div class="gale-div">
-        <h3 class="gale-title">Proteção:</h3>
+        <h3 class="gale-title">Assertividade:</h3>
         <p id="galeDados" class="gale-data"><strong>---</strong></p>
       </div>
     </div>
   </div>
 
   <div>
-    <iframe class="iframe" src="https://vemnabet.bet/game/oficial-pragmatic-slots-pp-rla" id="iframe" frameborder="0" allowfullscreen></iframe>
+    <iframe class="iframe" src="https://vemnabet.bet/game/oficial-pragmatic-live-pp-28401" id="iframe" frameborder="0" allowfullscreen></iframe>
   </div>
 
   <footer class="footer">
@@ -64,7 +71,7 @@
       transports: ['websocket', 'polling']
       // forceNew removido (default false)
     });
-	const PAGE_ID = 'aovivo';
+  const PAGE_ID = 'french-roulette';
 	const storageKey = (key) => `${PAGE_ID}:${key}`;
 
     let dadosAtuais = null;
@@ -191,6 +198,11 @@
       const resultsDiv = $('#results');
       resultsDiv.empty();
 
+      if (!results || !results.length) {
+        resultsDiv.text('Aguardando resultados reais...');
+        return;
+      }
+
       results.forEach((num, index) => {
         const resultBox = $('<div>').text(String(num)).addClass('result-box');
 
@@ -210,6 +222,32 @@
 
     socket.on('resultsUpdateAovivo', (results) => {
       displayResults(results.slice(0, 5));
+    });
+
+    function formatBRL(cents) {
+      return 'R$ ' + ((parseInt(cents || 0, 10) / 100).toFixed(2)).replace('.', ',');
+    }
+
+    function displayFrenchStats(stats) {
+      stats = stats || {};
+      $('#statGreens').text(stats.greens || 0);
+      $('#statReds').text(stats.reds || 0);
+      $('#statGains').text(formatBRL(stats.gains_cents || 0));
+      $('#statLosses').text(formatBRL(stats.losses_cents || 0));
+    }
+
+    socket.on('statsUpdateFrench', displayFrenchStats);
+    socket.on('sinalStatus', function(message) {
+      if (resetTimerId) {
+        clearTimeout(resetTimerId);
+        resetTimerId = null;
+      }
+      removeItem('sinalGerado');
+      $('#sinalgerado').text('- - -');
+      $('#sinalDados').text('- - -');
+      $('#protecaoDados').text('- - -');
+      $('#galeDados').html('- - -');
+      $('#loadingText').text(message || 'Aguardando jogadas reais').removeClass('loading-validada').addClass('loading-analisando');
     });
 
     // ===== GERENCIAMENTO DE MENSAGENS (mesmo socket) ===== //
