@@ -5,13 +5,14 @@
 
   var listeners = {};
   var refreshMs = 10000;
+  var refreshTimer = null;
 
   window.io = function () {
     return {
       on: function (evt, cb) { (listeners[evt] = listeners[evt] || []).push(cb); },
       emit: function () {},
       connect: function () { refresh(); },
-      disconnect: function () {}
+      disconnect: function () { stopRefresh(); }
     };
   };
 
@@ -50,7 +51,8 @@
       losses_cents: Number.isFinite(Number(stats.losses_cents)) ? Number(stats.losses_cents) : computedMoney.losses_cents,
       net_cents: Number.isFinite(Number(stats.net_cents)) ? Number(stats.net_cents) : computedMoney.net_cents
     };
-    var numbers = numberList(history).slice(0, 5);
+    if (payload.refresh_ms) refreshMs = Math.max(8000, Math.min(30000, parseInt(payload.refresh_ms, 10) || refreshMs));
+    var numbers = numberList(history).slice(0, 10);
     var signal = (payload.current_signal || []).map(String);
 
     fire('resultsUpdateAovivo', numbers);
@@ -79,6 +81,7 @@
   }
 
   function refresh() {
+    stopRefresh();
     fetch('/api/roulette/french/signals', { cache: 'no-store' })
       .then(function (res) { return res.json(); })
       .then(applyPayload)
@@ -87,11 +90,29 @@
         fire('statsUpdateFrench', { greens: 0, reds: 0, gains_cents: 0, losses_cents: 0, net_cents: 0, hit_rate: 0 });
         fire('resetSinal');
         fire('sinalStatus', err.message || 'Sem dados reais da French Roulette agora');
-      });
+      })
+      .finally(scheduleRefresh);
+  }
+
+  function stopRefresh() {
+    if (refreshTimer) {
+      clearTimeout(refreshTimer);
+      refreshTimer = null;
+    }
+  }
+
+  function scheduleRefresh() {
+    stopRefresh();
+    if (document.hidden) return;
+    refreshTimer = setTimeout(refresh, refreshMs);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     refresh();
-    setInterval(refresh, refreshMs);
+  });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopRefresh();
+    else refresh();
   });
 })();
