@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VemNaBet - Fortune Roulette</title>
   <link rel="icon" href="/favicon.png" type="image/png">
-  <script src="/games/aovivo/fortune-feed.js?v=20260429c"></script>
+  <script src="/games/aovivo/fortune-feed.js?v=20260430a"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="/games/aovivo/style.css?v=20260429b">
-<style id="__VNB_FORTUNE_BG__">body::before{background-image:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.72)),url('/games/xxxtreme/img/fortune-roulette-live-bg.webp')!important}</style>
+  <link rel="stylesheet" href="/games/aovivo/style.css?v=20260430a">
+<style id="__VNB_FORTUNE_BG__">body::before{background-image:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.72)),url('/games/roleta/img/fortune-roulette-live-bg.webp')!important}</style>
 <style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style>
 <style id="__VNB_HIDE_SCROLLBAR__">html,body{scrollbar-width:none!important;-ms-overflow-style:none!important}html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!important;height:0!important;display:none!important;background:transparent!important}body{-webkit-overflow-scrolling:touch}iframe{scrollbar-width:none}</style><style id="__VNB_IFRAME_FIX__">#iframe{margin:1em auto 3em auto!important;display:block;border:0;border-radius:15px;background:#000}body>div:last-of-type{margin-bottom:2em}</style>  <script src="/js/ref-tracker.js?v=20260420d"></script>
 </head>
@@ -20,7 +20,14 @@
   </div>
 
   <div class="logo-container">
-    <img src="/games/xxxtreme/img/Design.webp?v=20260429a" alt="Logo Fortune Roulette" class="logo" style="max-width:240px;border-radius:14px;">
+    <img src="/games/roleta/img/Design.webp?v=20260429a" alt="Logo Fortune Roulette" class="logo" style="max-width:240px;border-radius:14px;">
+  </div>
+
+  <div class="fr-stats" id="frStats">
+    <div class="fr-stat fr-stat-green"><span>Greens</span><strong id="statGreens">0</strong></div>
+    <div class="fr-stat fr-stat-red"><span>Reds</span><strong id="statReds">0</strong></div>
+    <div class="fr-stat"><span>Ganhos</span><strong id="statGains">R$ 0,00</strong></div>
+    <div class="fr-stat"><span>Perdas</span><strong id="statLosses">R$ 0,00</strong></div>
   </div>
 
   <div class='ultimosnumeros'>Últimos Números Fortune Roulette</div>
@@ -336,17 +343,49 @@
   var NOMES=['José','João','Antonio','Carlos','Paulo','Pedro','Lucas','Luiz','Marcos','Gabriel','Rafael','Daniel','Marcelo','Bruno','Eduardo','Felipe','Rodrigo','Mateus','André','Fernando','Fábio','Leonardo','Gustavo','Guilherme','Leandro','Tiago','Anderson','Ricardo','Jorge','Alexandre','Roberto','Diego','Vitor','Sérgio','Matheus','Thiago','Adriano','Luciano','Júlio','Renato','Alex','Vinícius','Rogério','Samuel','Ronaldo','Mário','Flávio','Douglas','Igor','Davi','Maria','Ana','Juliana','Márcia','Fernanda','Patrícia','Aline','Sandra','Camila','Amanda','Bruna','Jéssica','Letícia','Júlia','Luciana','Vanessa','Mariana','Gabriela','Vitória','Larissa','Cláudia','Beatriz','Rita','Luana','Sônia','Renata','Eliane'];
   var SOBRE=['A.','B.','C.','D.','F.','G.','L.','M.','N.','P.','R.','S.','V.'];
   var PRODUTO='CASSINO AO VIVO';
-  function valor(){return 'R$ '+(Math.random()*4800+200).toFixed(2).replace('.',',');}
+  // ===== Stats accumulator (driven by toasts) =====
+  var STATS_KEY='vnb_stats_fortune_v1';
+  var SEED={greens:79,reds:9,gains_cents:95400,losses_cents:10600};
+  var HIT_RATE=0.897;
+  function brl(c){return 'R$ '+(c/100).toFixed(2).replace('.',',');}
+  function loadStats(){
+    try{var raw=localStorage.getItem(STATS_KEY);if(!raw)return Object.assign({},SEED);
+      var s=JSON.parse(raw);
+      return{greens:(s.greens|0)||SEED.greens,reds:(s.reds|0)||SEED.reds,
+        gains_cents:(s.gains_cents|0)||SEED.gains_cents,
+        losses_cents:(s.losses_cents|0)||SEED.losses_cents};
+    }catch(e){return Object.assign({},SEED);}
+  }
+  function saveStats(s){try{localStorage.setItem(STATS_KEY,JSON.stringify(s));}catch(e){}}
+  function renderStats(s){
+    var g=document.getElementById('statGreens');if(g)g.textContent=s.greens;
+    var r=document.getElementById('statReds');if(r)r.textContent=s.reds;
+    var ga=document.getElementById('statGains');if(ga)ga.textContent=brl(s.gains_cents);
+    var lo=document.getElementById('statLosses');if(lo)lo.textContent=brl(s.losses_cents);
+  }
+  function genCents(){return Math.floor((Math.random()*4800+200)*100);}
+  function bumpStats(gainCents){
+    var s=loadStats();
+    s.greens+=1;
+    s.gains_cents+=gainCents;
+    if(Math.random()>HIT_RATE){
+      s.reds+=1;
+      s.losses_cents+=Math.floor((Math.random()*250+50)*100);
+    }
+    saveStats(s);renderStats(s);
+  }
   function show(){
+    var cents=genCents();
+    bumpStats(cents);
     var t=document.createElement('div');t.className='vnb-toast';
     var n=NOMES[Math.floor(Math.random()*NOMES.length)]+' '+SOBRE[Math.floor(Math.random()*SOBRE.length)];
-    t.innerHTML='<strong>'+n+'</strong> ganhou <strong>'+valor()+'</strong> no <strong>'+PRODUTO+'</strong>';
+    t.innerHTML='<strong>'+n+'</strong> ganhou <strong>'+brl(cents)+'</strong> no <strong>'+PRODUTO+'</strong>';
     document.body.appendChild(t);
     requestAnimationFrame(function(){t.classList.add('show');});
     setTimeout(function(){t.style.opacity='0';t.style.top='-80px';setTimeout(function(){t.remove();},400);},4200);
   }
   function loop(){show();setTimeout(loop,(Math.floor(Math.random()*22)+7)*1000);}
-  function start(){setTimeout(loop,1500);}
+  function start(){renderStats(loadStats());setTimeout(loop,1500);}
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',start);}else{start();}
 })();
 </script>

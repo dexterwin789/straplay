@@ -161,8 +161,14 @@ const GAMES = {
   'aviator':             { title: 'Aviator',               vemna: 'aviator' },
   'bacbo':               { title: 'Bac Bo',                vemna: 'golden-wealth-baccarat' },
   'aovivo':              { title: 'French Roulette',       vemna: 'oficial-pragmatic-live-pp-28401' },
-  'xxxtreme':            { title: 'Fortune Roulette',       vemna: 'oficial-pragmatic-live-pp-270' }
+  'roleta':              { title: 'Fortune Roulette',      vemna: 'oficial-pragmatic-live-pp-270' }
 };
+
+// Back-compat: old /game/xxxtreme URL → /game/roleta
+app.get('/game/xxxtreme', (req, res) => {
+  const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+  res.redirect(301, '/game/roleta' + qs);
+});
 
 // Prevent Cloudflare from caching HTML responses (game pages + SPA entry)
 app.use((req, res, next) => {
