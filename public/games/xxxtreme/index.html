@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VemNaBet - XXXTreme Lightning Roulette</title>
+  <title>VemNaBet - Fortune Roulette</title>
   <link rel="icon" href="/favicon.png" type="image/png">
-  <script src="/games/aovivo/local-feed.js"></script>
+  <script src="/games/aovivo/fortune-feed.js?v=20260429a"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="stylesheet" href="/games/aovivo/style.css">
 <style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style>
@@ -19,10 +19,10 @@
   </div>
 
   <div class="logo-container">
-    <img src="/games/aovivo/img/Design.png" alt="Logo Xtreme" class="logo">
+    <img src="/games/aovivo/img/Design.png" alt="Logo Fortune Roulette" class="logo">
   </div>
 
-  <div class='ultimosnumeros'>Últimos Números</div>
+  <div class='ultimosnumeros'>Últimos Números Fortune Roulette</div>
   <div id="results" class="results">Carregando resultados...</div>
 
   <div id="loadingMessage" class="sinal-container">
@@ -49,8 +49,39 @@
   </div>
 
   <div>
-    <iframe class="iframe" src="https://vemnabet.bet/game/lightning-roulette" id="iframe" frameborder="0" allowfullscreen></iframe>
+    <iframe class="iframe" src="about:blank" data-base-src="https://vemnabet.bet/game/oficial-pragmatic-live-pp-270" id="iframe" frameborder="0" allow="fullscreen; clipboard-read; clipboard-write" referrerpolicy="origin-when-cross-origin" allowfullscreen></iframe>
   </div>
+
+  <script>
+    (function () {
+      var frame = document.getElementById('iframe');
+      if (!frame) return;
+      function storedRef() {
+        try {
+          var fromUrl = new URLSearchParams(window.location.search).get('ref');
+          if (fromUrl) return fromUrl;
+        } catch (e) {}
+        if (window.VNB_REF) return window.VNB_REF;
+        try {
+          var raw = localStorage.getItem('vnb_ref');
+          var parsed = raw ? JSON.parse(raw) : null;
+          if (parsed && parsed.ref) return parsed.ref;
+        } catch (e) {}
+        try {
+          var match = document.cookie.match(/(?:^|;\s*)vnb_ref=([^;]+)/);
+          if (match) return decodeURIComponent(match[1]);
+        } catch (e) {}
+        return '';
+      }
+      var target = new URL(frame.getAttribute('data-base-src'));
+      var ref = storedRef();
+      if (ref && !target.searchParams.get('ref')) target.searchParams.set('ref', ref);
+      frame.src = target.toString();
+      document.addEventListener('fullscreenchange', function () {
+        document.body.classList.toggle('vnb-frame-fullscreen', document.fullscreenElement === frame);
+      });
+    })();
+  </script>
 
   <footer class="footer">
     © 2024 - VemNaBet
@@ -64,7 +95,7 @@
       transports: ['websocket', 'polling']
       // forceNew removido (default false)
     });
-	const PAGE_ID = 'aovivo';
+	const PAGE_ID = 'fortune-roulette';
 	const storageKey = (key) => `${PAGE_ID}:${key}`;
 
     let dadosAtuais = null;
