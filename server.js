@@ -125,6 +125,12 @@ app.get('/api/roulette/french/signals', (_, res) => {
   proxyCassinoJson('/api/roulette/french/signals', res);
 });
 
+app.get('/api/roulette/pragmatic/signals', (req, res) => {
+  const game = String(req.query.game_code || '');
+  if (!game) return res.status(400).json({ ok: false, msg: 'game_code obrigatório.' });
+  proxyCassinoJson('/api/roulette/pragmatic/signals?game_code=' + encodeURIComponent(game), res);
+});
+
 // Headers applied to every HTML/static response so Cloudflare never caches HTML
 function setNoStore(res, filePath) {
   if (!filePath || /\.(html)$/i.test(filePath)) {
@@ -155,7 +161,7 @@ const GAMES = {
   'aviator':             { title: 'Aviator',               vemna: 'aviator' },
   'bacbo':               { title: 'Bac Bo',                vemna: 'golden-wealth-baccarat' },
   'aovivo':              { title: 'French Roulette',       vemna: 'oficial-pragmatic-live-pp-28401' },
-  'xxxtreme':            { title: 'XXXTreme Lightning Roulette', vemna: 'lightning-roulette' }
+  'xxxtreme':            { title: 'Fortune Roulette',       vemna: 'oficial-pragmatic-live-pp-270' }
 };
 
 // Prevent Cloudflare from caching HTML responses (game pages + SPA entry)

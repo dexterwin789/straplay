@@ -4,7 +4,7 @@
   'use strict';
 
   var GAME_CODE = 'oficial-pragmatic-live-pp-270';
-  var ENDPOINT = 'https://vemnabet.bet/api/roulette/pragmatic/signals?game_code=' + encodeURIComponent(GAME_CODE);
+  var ENDPOINT = '/api/roulette/pragmatic/signals?game_code=' + encodeURIComponent(GAME_CODE);
   var listeners = {};
   var refreshMs = 10000;
   var refreshTimer = null;
