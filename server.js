@@ -151,17 +151,17 @@ app.use(express.static(path.join(__dirname, 'public'), {
 
 // Slug -> VemnaBet game code
 const GAMES = {
-  'hack-tiger':          { title: 'Hack Fortune Tiger',    vemna: 'fortune-tiger' },
-  'hack-rabbit':         { title: 'Hack Fortune Rabbit',   vemna: 'fortune-rabbit' },
-  'hack-mouse':          { title: 'Hack Fortune Mouse',    vemna: 'fortune-mouse' },
-  'hack-ox':             { title: 'Hack Fortune Ox',       vemna: 'fortune-ox' },
-  'hack-dragon':         { title: 'Hack Fortune Dragon',   vemna: 'fortune-dragon' },
-  'hack-double-fortune': { title: 'Hack Double Fortune',   vemna: 'double-fortune' },
-  'hack-mines':          { title: 'Hack Mines',            vemna: 'mines-pro' },
-  'aviator':             { title: 'Aviator',               vemna: 'aviator' },
-  'bacbo':               { title: 'Bac Bo',                vemna: 'golden-wealth-baccarat' },
-  'aovivo':              { title: 'French Roulette',       vemna: 'oficial-pragmatic-live-pp-28401' },
-  'roleta':              { title: 'Fortune Roulette',      vemna: 'oficial-pragmatic-live-pp-270' }
+  'hack-tiger':          { title: 'Hack Fortune Tiger',    vemna: 'pgsoft-126' },
+  'hack-rabbit':         { title: 'Hack Fortune Rabbit',   vemna: 'pgsoft-1543462' },
+  'hack-mouse':          { title: 'Hack Fortune Mouse',    vemna: 'pgsoft-68' },
+  'hack-ox':             { title: 'Hack Fortune Ox',       vemna: 'pgsoft-98' },
+  'hack-dragon':         { title: 'Hack Fortune Dragon',   vemna: 'pgsoft-1695365' },
+  'hack-double-fortune': { title: 'Hack Double Fortune',   vemna: 'pgsoft-48' },
+  'hack-mines':          { title: 'Hack Mines',            vemna: 'oficial-spribe-spb-mines' },
+  'aviator':             { title: 'Aviator',               vemna: 'oficial-spribe-spb-aviator' },
+  'bacbo':               { title: 'Bac Bo Brasileiro',     vemna: 'oficial-evolution-live-evolive-porbacbo00000001' },
+  'aovivo':              { title: 'Roleta Brasileira',     vemna: 'oficial-evolution-live-evolive-porrou0000000001' },
+  'roleta':              { title: 'XXXtreme Lightning Roulette', vemna: 'oficial-evolution-live-evolive-xxxtreme-lightning-roulette' }
 };
 
 // Back-compat: old /game/xxxtreme URL → /game/roleta
