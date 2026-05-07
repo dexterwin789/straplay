@@ -42,6 +42,33 @@
     }, { gains_cents: 0, losses_cents: 0, net_cents: 0 });
   }
 
+  function fallbackDisplaySignal(payload, signal, history) {
+    var display = payload.signal_display;
+    if (display && typeof display === 'object') {
+      return {
+        sinalgerado: display.sinalgerado || display.headline || 'ENTRADA CONFIRMADA',
+        tipo: display.tipo || 'Sinal:',
+        msg: display.msg || display.signal || signal.join(' - '),
+        protecao: display.protecao || display.protection || payload.msg || 'Sinal ativo da XXXtreme Lightning Roulette',
+        gales: display.gales || display.gale || String((payload.stats && payload.stats.hit_rate) || 0) + '%'
+      };
+    }
+    var last = parseInt((history[0] && history[0].number) || signal[0] || 0, 10) || 0;
+    var mode = Math.abs(last + signal.length) % 4;
+    if (mode === 1) {
+      return { sinalgerado: 'COBERTURA DE VIZINHOS', tipo: 'Vizinhos:', msg: signal.slice(0, 5).join(' - '), protecao: payload.msg || 'Base no último resultado', gales: 'Até 3 proteções' };
+    }
+    if (mode === 2) {
+      var dozen = last === 0 ? 1 : Math.ceil(last / 12);
+      return { sinalgerado: 'ENTRADA POR DÚZIA', tipo: 'Dúzia:', msg: dozen + 'ª dúzia + ' + signal.slice(0, 4).join(' - '), protecao: 'Cobrir zero', gales: 'Até 2 proteções' };
+    }
+    if (mode === 3) {
+      var column = last === 0 ? 1 : ((last - 1) % 3) + 1;
+      return { sinalgerado: 'ENTRADA POR COLUNA', tipo: 'Coluna:', msg: column + 'ª coluna + ' + signal.slice(0, 4).join(' - '), protecao: payload.msg || 'Sinal ativo da XXXtreme Lightning Roulette', gales: 'Até 3 proteções' };
+    }
+    return { sinalgerado: 'ENTRADA POR NÚMEROS', tipo: 'Números:', msg: signal.join(' - '), protecao: payload.msg || 'Sinal ativo da XXXtreme Lightning Roulette', gales: String((payload.stats && payload.stats.hit_rate) || 0) + '%' };
+  }
+
   function applyPayload(payload) {
     if (!payload || !payload.ok) throw new Error(payload && payload.msg ? payload.msg : 'Nao foi possivel carregar sinais.');
     var history = payload.history || [];
@@ -54,7 +81,8 @@
     };
     if (payload.refresh_ms) refreshMs = Math.max(8000, Math.min(30000, parseInt(payload.refresh_ms, 10) || refreshMs));
     var numbers = numberList(history).slice(0, 10);
-    var signal = (payload.current_signal || []).map(String);
+    var rawSignal = payload.current_signal || [];
+    var signal = (Array.isArray(rawSignal) ? rawSignal : (rawSignal.numbers || [])).map(String);
 
     fire('resultsUpdateAovivo', numbers);
     fire('statsUpdateFrench', {
@@ -71,13 +99,7 @@
       fire('sinalStatus', payload.msg || 'Aguardando jogadas reais da XXXtreme Lightning Roulette');
       return;
     }
-    fire('sinalGerado', {
-      sinalgerado: 'ENTRADA POR NUMEROS',
-      tipo: 'Numeros:',
-      msg: signal.join(' - '),
-      protecao: payload.msg || 'Sinal ativo da Fortune Roulette',
-      gales: String(stats.hit_rate || 0) + '%'
-    });
+    fire('sinalGerado', fallbackDisplaySignal(payload, signal, history));
   }
 
   function refresh() {

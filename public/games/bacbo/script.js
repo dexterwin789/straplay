@@ -6,6 +6,13 @@ const galeDadosEl = document.getElementById('galeDados');
 const btnEl = document.getElementById('btnBacbo');
 
 const SINAIS_POSSIVEIS = ['AZUL', 'VERMELHO'];
+const MODELOS_BACBO = [
+  { headline: 'ENTRADA CONFIRMADA', signal: 'APOSTAR NO {lado}', protection: 'NÃO ESQUEÇA PROTEJA O EMPATE', gale: 'ATÉ 3 PROTEÇÕES' },
+  { headline: 'TENDÊNCIA IDENTIFICADA', signal: 'MANTER NO {lado}', protection: 'PROTEÇÃO NO EMPATE', gale: 'ATÉ 2 PROTEÇÕES' },
+  { headline: 'QUEBRA DE PADRÃO', signal: 'ENTRADA NO {lado}', protection: 'COBRIR EMPATE SE ABRIR', gale: '1ª E 2ª PROTEÇÃO' },
+  { headline: 'ENTRADA COM EMPATE', signal: '{lado} + EMPATE', protection: 'EMPATE COMO PROTEÇÃO PRINCIPAL', gale: 'ATÉ 3 PROTEÇÕES' },
+  { headline: 'SINAL DE REPETIÇÃO', signal: 'REPETIR {lado}', protection: 'PROTEJA O EMPATE', gale: 'ATÉ 2 PROTEÇÕES' }
+];
 const TEMPO_BLOQUEIO = 30;
 const TEXTO_FIXO_PROTECAO = 'ATÉ 3 PROTEÇÕES';
 
@@ -73,13 +80,14 @@ function agendarLimpezaSinal(timestampExpiracao) {
 
 function aplicarSinalLocal() {
   const lado = escolher(SINAIS_POSSIVEIS);
+  const modelo = escolher(MODELOS_BACBO);
   const minutosValidade = gerarValidadeAleatoria();
   const validade = gerarHorarioValidade(minutosValidade);
 
-  sinalGeradoEl.textContent = 'ENTRADA CONFIRMADA';
-  sinalDadosEl.textContent = `APOSTAR NO ${lado}`;
-  protecaoDadosEl.textContent = `NÃO ESQUEÇA PROTEJA O EMPATE`;
-  galeDadosEl.innerHTML = `<strong>${TEXTO_FIXO_PROTECAO}</strong>`;
+  sinalGeradoEl.textContent = modelo.headline;
+  sinalDadosEl.textContent = modelo.signal.replace('{lado}', lado);
+  protecaoDadosEl.textContent = modelo.protection;
+  galeDadosEl.innerHTML = `<strong>${modelo.gale || TEXTO_FIXO_PROTECAO}</strong>`;
   atualizarStatus('SINAL ENCONTRADO', 'ok');
 
   agendarLimpezaSinal(validade.timestamp);
