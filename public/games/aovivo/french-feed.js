@@ -1,4 +1,4 @@
-// French Roulette real feed for the first app roulette page.
+// Roleta Brasileira feed for the first app roulette page.
 // Keeps the old page contract: io().on('resultsUpdateAovivo' | 'sinalGerado' | 'resetSinal').
 (function () {
   'use strict';
@@ -67,7 +67,7 @@
 
     if (!signal.length) {
       fire('resetSinal');
-      fire('sinalStatus', payload.msg || 'Aguardando jogadas reais da French Roulette');
+      fire('sinalStatus', payload.msg || 'Aguardando jogadas reais da Roleta Brasileira');
       return;
     }
 
@@ -89,7 +89,7 @@
         fire('resultsUpdateAovivo', []);
         fire('statsUpdateFrench', { greens: 0, reds: 0, gains_cents: 0, losses_cents: 0, net_cents: 0, hit_rate: 0 });
         fire('resetSinal');
-        fire('sinalStatus', err.message || 'Sem dados reais da French Roulette agora');
+        fire('sinalStatus', err.message || 'Sem dados da Roleta Brasileira agora');
       })
       .finally(scheduleRefresh);
   }

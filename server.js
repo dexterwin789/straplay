@@ -14,6 +14,7 @@ const KNOWN_APP_HOSTS = new Set([
   'localhost', '127.0.0.1'
 ]);
 const IS_PROD = process.env.NODE_ENV === 'production' || !!process.env.RAILWAY_ENVIRONMENT || !!process.env.RAILWAY_PROJECT_ID;
+const SIGNAL_BASE = process.env.SIGNAL_BASE || 'http://200.234.219.160';
 
 // Host → ref cache (5min)
 const _hostCache = new Map();
@@ -94,8 +95,8 @@ app.get('/r/:token', (req, res) => {
   return res.redirect(302, '/');
 });
 
-function proxyCassinoJson(pathname, res) {
-  const target = new URL(pathname, CASSINO_BASE);
+function proxyJson(base, pathname, res, fallback) {
+  const target = new URL(pathname, base);
   const client = target.protocol === 'http:' ? http : https;
   let done = false;
   function finish(status, payload) {
@@ -114,21 +115,38 @@ function proxyCassinoJson(pathname, res) {
       finish(upstream.statusCode || 502, body || '{}');
     });
   });
-  req.on('error', () => finish(502, { ok: false, msg: 'Nao foi possivel consultar o VemNaBet agora.' }));
+  req.on('error', () => {
+    if (typeof fallback === 'function') return fallback();
+    finish(502, { ok: false, msg: 'Nao foi possivel consultar os sinais agora.' });
+  });
   req.on('timeout', () => {
     req.destroy();
-    finish(504, { ok: false, msg: 'Tempo esgotado ao consultar o VemNaBet.' });
+    if (typeof fallback === 'function') return fallback();
+    finish(504, { ok: false, msg: 'Tempo esgotado ao consultar os sinais.' });
   });
 }
 
+function proxyCassinoJson(pathname, res) {
+  proxyJson(CASSINO_BASE, pathname, res);
+}
+
+function proxySignalJson(pathname, res, fallbackPath) {
+  proxyJson(SIGNAL_BASE, pathname, res, fallbackPath ? function () { proxyCassinoJson(fallbackPath, res); } : null);
+}
+
 app.get('/api/roulette/french/signals', (_, res) => {
-  proxyCassinoJson('/api/roulette/french/signals', res);
+  proxySignalJson('/api/roulette/french/signals', res, '/api/roulette/french/signals');
 });
 
 app.get('/api/roulette/pragmatic/signals', (req, res) => {
   const game = String(req.query.game_code || '');
   if (!game) return res.status(400).json({ ok: false, msg: 'game_code obrigatório.' });
-  proxyCassinoJson('/api/roulette/pragmatic/signals?game_code=' + encodeURIComponent(game), res);
+  const path = '/api/roulette/pragmatic/signals?game_code=' + encodeURIComponent(game);
+  proxySignalJson(path, res, path);
+});
+
+app.get('/api/signals/:slug', (req, res) => {
+  proxySignalJson('/api/signals/' + encodeURIComponent(req.params.slug), res);
 });
 
 // Headers applied to every HTML/static response so Cloudflare never caches HTML

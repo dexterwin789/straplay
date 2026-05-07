@@ -74,7 +74,7 @@ function agendarLimpezaSinal(timestampExpiracao) {
   }, tempoRestante);
 }
 
-function gerarSinal() {
+function aplicarSinalLocal() {
   const minutosValidade = gerarValidadeAleatoria();
   const validade = gerarHorarioValidade(minutosValidade);
 
@@ -85,6 +85,23 @@ function gerarSinal() {
   atualizarStatus('SINAL ENCONTRADO', 'ok');
 
   agendarLimpezaSinal(validade.timestamp);
+}
+
+async function gerarSinal() {
+  try {
+    const response = await fetch('/api/signals/aviator', { cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || !payload.ok || !payload.current_signal) throw new Error(payload.msg || 'Sem sinal');
+    const signal = payload.current_signal;
+    sinalGeradoEl.textContent = signal.headline || 'ENTRADA CONFIRMADA';
+    sinalDadosEl.textContent = signal.signal || TEXTO_SINAL;
+    protecaoDadosEl.textContent = signal.protection || `VÁLIDO ATÉ ${gerarHorarioValidade(4).texto}`;
+    galeDadosEl.innerHTML = `<strong>${signal.gale || TEXTO_FIXO_PROTECAO}</strong>`;
+    atualizarStatus('SINAL ENCONTRADO', 'ok');
+    agendarLimpezaSinal(Date.now() + 4 * 60 * 1000);
+  } catch (err) {
+    aplicarSinalLocal();
+  }
 }
 
 function finalizarCountdown() {
@@ -119,10 +136,10 @@ function iniciarCountdown(segundos) {
   }, 1000);
 }
 
-btnEl.addEventListener('click', () => {
+btnEl.addEventListener('click', async () => {
   if (btnEl.disabled) return;
 
-  gerarSinal();
+  await gerarSinal();
   iniciarCountdown(TEMPO_BLOQUEIO);
 });
 

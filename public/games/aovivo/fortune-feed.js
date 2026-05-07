@@ -1,9 +1,9 @@
-// Fortune Roulette real feed (Pragmatic PP_270).
+// XXXtreme Lightning Roulette feed.
 // Same contract used by french-feed.js so the existing aovivo page works.
 (function () {
   'use strict';
 
-  var GAME_CODE = 'oficial-pragmatic-live-pp-270';
+  var GAME_CODE = 'oficial-evolution-live-evolive-xxxtreme-lightning-roulette';
   var ENDPOINT = '/api/roulette/pragmatic/signals?game_code=' + encodeURIComponent(GAME_CODE);
   var listeners = {};
   var refreshMs = 10000;
@@ -68,7 +68,7 @@
 
     if (!signal.length) {
       fire('resetSinal');
-      fire('sinalStatus', payload.msg || 'Aguardando jogadas reais da Fortune Roulette');
+      fire('sinalStatus', payload.msg || 'Aguardando jogadas reais da XXXtreme Lightning Roulette');
       return;
     }
     fire('sinalGerado', {
@@ -89,7 +89,7 @@
         fire('resultsUpdateAovivo', []);
         fire('statsUpdateFrench', { greens: 0, reds: 0, gains_cents: 0, losses_cents: 0, net_cents: 0, hit_rate: 0 });
         fire('resetSinal');
-        fire('sinalStatus', err.message || 'Sem dados reais da Fortune Roulette agora');
+        fire('sinalStatus', err.message || 'Sem dados da XXXtreme Lightning Roulette agora');
       })
       .finally(scheduleRefresh);
   }
