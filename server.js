@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const CASSINO_BASE = process.env.CASSINO_BASE || 'https://vemnabet.bet';
+const DEFAULT_AFFILIATE_REF = process.env.DEFAULT_AFFILIATE_REF || 'VNB45CY64';
 const KNOWN_APP_HOSTS = new Set([
   'app.vemnabet.bet', 'www.app.vemnabet.bet',
   'straplay-production.up.railway.app',
@@ -56,6 +57,26 @@ async function resolveHostRef(host) {
   return ref;
 }
 
+function isValidRef(ref) {
+  return !!ref && /^[A-Za-z0-9_-]{1,64}$/.test(String(ref));
+}
+
+function requestHasRef(req) {
+  const queryRef = (req.query && (req.query.ref || req.query.subaff)) ? String(req.query.ref || req.query.subaff).trim() : '';
+  if (isValidRef(queryRef)) return true;
+  const cookie = String(req.headers.cookie || '');
+  const match = cookie.match(/(?:^|;\s*)vnb_ref=([^;]+)/);
+  if (!match) return false;
+  try { return isValidRef(decodeURIComponent(match[1])); } catch { return false; }
+}
+
+function isHtmlNavigation(req) {
+  const accept = String(req.headers.accept || '');
+  return req.method === 'GET' && (
+    accept.includes('text/html') || req.path === '/' || req.path.startsWith('/game/') || req.path.endsWith('.html')
+  );
+}
+
 // ── Custom domain middleware ──
 // If request comes on an affiliate's custom domain (CNAME → app.vemnabet.bet),
 // redirect once to https://app.vemnabet.bet/r/<signedToken> so the cookie
@@ -65,16 +86,26 @@ app.use(async (req, res, next) => {
   const host = (req.headers.host || '').toLowerCase().split(':')[0];
   if (!host || req.path === '/healthz' || req.path === '/health') return next();
   // Only redirect for top-level HTML navigations, not APIs/assets.
-  const accept = String(req.headers.accept || '');
-  const isHtmlNav = req.method === 'GET' && (
-    accept.includes('text/html') || req.path === '/' || req.path.startsWith('/game/')
-  );
-  if (!isHtmlNav) return next();
+  if (!isHtmlNavigation(req)) return next();
   const ref = await resolveHostRef(host);
   if (!ref) return next();
   const token = signRef(ref);
   if (!token) return next();
   return res.redirect(302, 'https://app.vemnabet.bet/r/' + encodeURIComponent(token));
+});
+
+// Bare app visits without ?ref= and without a camouflaged domain should still
+// land on the default affiliate, while explicit refs and stored cookies win.
+app.use((req, res, next) => {
+  if (!isHtmlNavigation(req)) return next();
+  if (req.path === '/healthz' || req.path === '/health' || req.path.startsWith('/api/') || req.path.startsWith('/r/')) return next();
+  if (requestHasRef(req)) return next();
+  const token = signRef(DEFAULT_AFFILIATE_REF);
+  if (!token) return next();
+  const target = IS_PROD
+    ? 'https://app.vemnabet.bet/r/' + encodeURIComponent(token)
+    : '/r/' + encodeURIComponent(token);
+  return res.redirect(302, target);
 });
 
 // /r/:token — HMAC-signed camouflaged ref. Sets .vemnabet.bet cookie, 302 to "/"

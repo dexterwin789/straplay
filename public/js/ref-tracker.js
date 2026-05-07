@@ -3,6 +3,7 @@
 // Works on every page when included in the footer.
 (function () {
   var KEY = 'vnb_ref';
+  var DEFAULT_REF = 'VNB45CY64';
   var TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
   function now() { return Date.now(); }
@@ -102,6 +103,11 @@
         if (/^[A-Za-z0-9_-]{1,64}$/.test(c)) { ref = c; saveRef(c); }
       }
     } catch (e) {}
+  }
+
+  if (!ref && DEFAULT_REF) {
+    ref = DEFAULT_REF;
+    saveRef(ref);
   }
 
   // Expose for other scripts
