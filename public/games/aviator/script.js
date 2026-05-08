@@ -22,7 +22,7 @@ function gerarValidadeAleatoria() {
 }
 
 function gerarHorarioValidade(minutos) {
-  const data = new Date();
+  const data = new Date(window.VNBSignalSync ? window.VNBSignalSync.now() : Date.now());
   data.setMinutes(data.getMinutes() + minutos);
   return {
     texto: `${pad(data.getHours())}:${pad(data.getMinutes())}`,
@@ -61,7 +61,8 @@ function cancelarExpiracaoAnterior() {
 function agendarLimpezaSinal(timestampExpiracao) {
   cancelarExpiracaoAnterior();
 
-  const tempoRestante = timestampExpiracao - Date.now();
+  const agora = window.VNBSignalSync ? window.VNBSignalSync.now() : Date.now();
+  const tempoRestante = timestampExpiracao - agora;
 
   if (tempoRestante <= 0) {
     limparCampos();
@@ -93,14 +94,33 @@ async function gerarSinal() {
     const payload = await response.json();
     if (!response.ok || !payload.ok || !payload.current_signal) throw new Error(payload.msg || 'Sem sinal');
     const signal = payload.current_signal;
-    sinalGeradoEl.textContent = signal.headline || 'ENTRADA CONFIRMADA';
-    sinalDadosEl.textContent = signal.signal || TEXTO_SINAL;
-    protecaoDadosEl.textContent = signal.protection || `VÁLIDO ATÉ ${gerarHorarioValidade(4).texto}`;
-    galeDadosEl.innerHTML = `<strong>${signal.gale || TEXTO_FIXO_PROTECAO}</strong>`;
+    const display = window.VNBSignalSync
+      ? window.VNBSignalSync.attach({
+          sinalgerado: signal.headline || 'ENTRADA CONFIRMADA',
+          msg: signal.signal || TEXTO_SINAL,
+          protecao: signal.protection || `VÁLIDO ATÉ ${gerarHorarioValidade(4).texto}`,
+          gales: signal.gale || TEXTO_FIXO_PROTECAO
+        }, payload, { game: 'aviator', roundMs: 15000, entryWindowMs: 7000, holdMs: 20000 })
+      : {
+          sinalgerado: signal.headline || 'ENTRADA CONFIRMADA',
+          msg: signal.signal || TEXTO_SINAL,
+          protecao: signal.protection || `VÁLIDO ATÉ ${gerarHorarioValidade(4).texto}`,
+          gales: signal.gale || TEXTO_FIXO_PROTECAO
+        };
+    if (display._entryLate) {
+      atualizarStatus(window.VNBSignalSync.STATUS_WAITING, 'analise');
+      return false;
+    }
+    sinalGeradoEl.textContent = display.sinalgerado;
+    sinalDadosEl.textContent = display.msg;
+    protecaoDadosEl.textContent = display.protecao;
+    galeDadosEl.innerHTML = `<strong>${display.gales}</strong>`;
     atualizarStatus('SINAL ENCONTRADO', 'ok');
-    agendarLimpezaSinal(Date.now() + 4 * 60 * 1000);
+    agendarLimpezaSinal(display._validUntil || Date.now() + 4 * 60 * 1000);
+    return true;
   } catch (err) {
     aplicarSinalLocal();
+    return true;
   }
 }
 
@@ -139,9 +159,8 @@ function iniciarCountdown(segundos) {
 btnEl.addEventListener('click', async () => {
   if (btnEl.disabled) return;
 
-  await gerarSinal();
-  iniciarCountdown(TEMPO_BLOQUEIO);
+  const gerou = await gerarSinal();
+  if (gerou) iniciarCountdown(TEMPO_BLOQUEIO);
 });
 
-gerarResultadosIniciais();
 limparCampos();

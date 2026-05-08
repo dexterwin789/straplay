@@ -126,6 +126,11 @@ app.get('/r/:token', (req, res) => {
   return res.redirect(302, '/');
 });
 
+app.get('/api/time', (_, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.json({ ok: true, server_time: new Date().toISOString() });
+});
+
 function proxyJson(base, pathname, res, fallback) {
   const target = new URL(pathname, base);
   const client = target.protocol === 'http:' ? http : https;
@@ -133,7 +138,18 @@ function proxyJson(base, pathname, res, fallback) {
   function finish(status, payload) {
     if (done) return;
     done = true;
-    if (typeof payload === 'string') return res.status(status).type('application/json').send(payload || '{}');
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    if (typeof payload === 'string') {
+      try {
+        const parsed = JSON.parse(payload || '{}');
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          if (!parsed.server_time) parsed.server_time = new Date().toISOString();
+          return res.status(status).json(parsed);
+        }
+      } catch {}
+      return res.status(status).type('application/json').send(payload || '{}');
+    }
+    if (payload && typeof payload === 'object' && !payload.server_time) payload.server_time = new Date().toISOString();
     return res.status(status).json(payload);
   }
   const req = client.get(target, { timeout: 5000, headers: { 'Accept': 'application/json' } }, (upstream) => {

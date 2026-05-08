@@ -78,7 +78,7 @@
       losses_cents: Number.isFinite(Number(stats.losses_cents)) ? Number(stats.losses_cents) : computedMoney.losses_cents,
       net_cents: Number.isFinite(Number(stats.net_cents)) ? Number(stats.net_cents) : computedMoney.net_cents
     };
-    if (payload.refresh_ms) refreshMs = Math.max(8000, Math.min(30000, parseInt(payload.refresh_ms, 10) || refreshMs));
+    if (payload.refresh_ms) refreshMs = Math.max(2500, Math.min(10000, parseInt(payload.refresh_ms, 10) || refreshMs));
     var numbers = numberList(history).slice(0, 10);
     var rawSignal = payload.current_signal || [];
     var signal = (Array.isArray(rawSignal) ? rawSignal : (rawSignal.numbers || [])).map(String);
@@ -99,7 +99,16 @@
       return;
     }
 
-    fire('sinalGerado', fallbackDisplaySignal(payload, signal, history));
+    var display = fallbackDisplaySignal(payload, signal, history);
+    if (window.VNBSignalSync) {
+      display = window.VNBSignalSync.attach(display, payload, {
+        game: 'roleta-brasileira',
+        roundMs: 30000,
+        entryWindowMs: 14000,
+        holdMs: 33000
+      });
+    }
+    fire('sinalGerado', display);
   }
 
   function refresh() {

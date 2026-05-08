@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VemNaBet - Roleta Brasileira</title>
   <link rel="icon" href="/favicon.png" type="image/png">
-  <script src="/games/aovivo/french-feed.js?v=20260507a"></script>
+  <script src="/js/signal-sync.js?v=20260508a"></script>
+  <script src="/games/aovivo/french-feed.js?v=20260508a"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="stylesheet" href="/games/aovivo/style.css?v=20260506b">
 <style id="__VNB_SCROLL_FIX__">html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100vh}body{overflow-y:auto!important}</style>
@@ -112,6 +113,7 @@
     let analisar = false;
     let fallbackStorage = {};
     let resetTimerId = null;
+    let signalExpireTimerId = null;
 
     // ===== LocalStorage helpers ===== //
     function isLocalStorageAvailable() {
@@ -140,9 +142,56 @@
 	  else delete fallbackStorage[storageKey(key)];
 	}
 
+    function setSignalStatus(text) {
+      const loadingText = $('#loadingText');
+      loadingText.removeClass('loading-validada loading-analisando');
+      loadingText.text(text || 'BUSCANDO SINAIS...');
+      loadingText.addClass('loading-analisando');
+    }
+
+    function storedSinal() {
+      try {
+        const raw = getItem('sinalGerado');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function cancelSignalExpiry() {
+      if (signalExpireTimerId) {
+        clearTimeout(signalExpireTimerId);
+        signalExpireTimerId = null;
+      }
+    }
+
+    function scheduleSignalExpiry(dados) {
+      cancelSignalExpiry();
+      const until = Number(dados && dados._validUntil || 0);
+      if (!until) return;
+      const current = window.VNBSignalSync ? window.VNBSignalSync.now() : Date.now();
+      const wait = until - current;
+      if (wait <= 0) {
+        clearSinal();
+        return;
+      }
+      signalExpireTimerId = setTimeout(() => {
+        clearSinal();
+        signalExpireTimerId = null;
+      }, wait);
+    }
+
     // ===== UI: sinal ===== //
     function displaySinal(dados) {
       if (!dados) return;
+
+      const sync = window.VNBSignalSync;
+      const incoming = sync ? sync.normalize(dados, { holdMs: 45000 }) : dados;
+      const current = dadosAtuais || storedSinal();
+      if (sync && !sync.shouldReplace(current, incoming)) {
+        if ((incoming._entryLate || sync.now() >= Number(incoming._validUntil || 0)) && !sync.isActive(current)) setSignalStatus(sync.STATUS_WAITING);
+        return;
+      }
 
       // Se chegou sinal, cancela qualquer reset pendente
       if (resetTimerId) {
@@ -151,13 +200,15 @@
       }
 
       analisar = true;
-      dados.timestamp = Date.now();
-      setItem('sinalGerado', JSON.stringify(dados));
+      dadosAtuais = incoming;
+      dadosAtuais.timestamp = dadosAtuais.timestamp || Date.now();
+      setItem('sinalGerado', JSON.stringify(dadosAtuais));
+      scheduleSignalExpiry(dadosAtuais);
 
-      $('#sinalgerado').text(dados.sinalgerado || '- - -');
-      $('#sinalDados').html(`${dados.tipo || ''} ${dados.msg || ''}`);
-      $('#protecaoDados').text(dados.protecao || '- - -');
-      $('#galeDados').html(`<strong>${dados.gales || '- - -'}</strong>`);
+      $('#sinalgerado').text(dadosAtuais.sinalgerado || '- - -');
+      $('#sinalDados').html(`${dadosAtuais.tipo || ''} ${dadosAtuais.msg || ''}`);
+      $('#protecaoDados').text(dadosAtuais.protecao || '- - -');
+      $('#galeDados').html(`<strong>${dadosAtuais.gales || '- - -'}</strong>`);
 
       updateLoadingMessage();
     }
@@ -165,6 +216,7 @@
     function clearSinal() {
       dadosAtuais = null;
       analisar = false;
+      cancelSignalExpiry();
 
       removeItem('sinalGerado');
 
@@ -181,11 +233,12 @@
       const expirationTime = 3600000; // 1h
 
       if (savedSinal) {
-        const dados = JSON.parse(savedSinal);
-        const currentTime = Date.now();
+        const dados = window.VNBSignalSync ? window.VNBSignalSync.normalize(JSON.parse(savedSinal), { holdMs: 45000 }) : JSON.parse(savedSinal);
+        const currentTime = window.VNBSignalSync ? window.VNBSignalSync.now() : Date.now();
         const storedTime = dados.timestamp || 0;
+        const expiresAt = Number(dados._validUntil || storedTime + expirationTime);
 
-        if (currentTime - storedTime > expirationTime) {
+        if (currentTime > expiresAt || currentTime - storedTime > expirationTime) {
           removeItem('sinalGerado');
           clearSinal();
         } else {
@@ -219,6 +272,8 @@
     });
 
     socket.on('resetSinal', () => {
+      const active = dadosAtuais || storedSinal();
+      if (window.VNBSignalSync && window.VNBSignalSync.isActive(active)) return;
       // agenda limpar, mas evita acumular timeouts
       if (resetTimerId) clearTimeout(resetTimerId);
       resetTimerId = setTimeout(() => {
@@ -269,16 +324,10 @@
 
     socket.on('statsUpdateFrench', displayFrenchStats);
     socket.on('sinalStatus', function(message) {
-      if (resetTimerId) {
-        clearTimeout(resetTimerId);
-        resetTimerId = null;
-      }
-      removeItem('sinalGerado');
-      $('#sinalgerado').text('- - -');
-      $('#sinalDados').text('- - -');
-      $('#protecaoDados').text('- - -');
-      $('#galeDados').html('- - -');
-      $('#loadingText').text(message || 'Buscando sinais...').removeClass('loading-validada').addClass('loading-analisando');
+      const active = dadosAtuais || storedSinal();
+      if (window.VNBSignalSync && window.VNBSignalSync.isActive(active)) return;
+      clearSinal();
+      setSignalStatus(message || 'Buscando sinais...');
     });
 
     // ===== GERENCIAMENTO DE MENSAGENS (mesmo socket) ===== //
@@ -321,14 +370,14 @@
     });
 
 	window.addEventListener('pageshow', () => {
-	  clearSinal();
+    loadSinalFromStorage();
 	  socket.disconnect();
 	  socket.connect();
 	});
 
 	document.addEventListener('visibilitychange', () => {
 	  if (document.visibilityState === 'visible') {
-		clearSinal();
+    loadSinalFromStorage();
 		socket.disconnect();
 		socket.connect();
 	  }

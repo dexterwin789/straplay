@@ -8,6 +8,7 @@
     <link rel="icon" href="/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
     <title>Hack do Rabbit - Fortunes Hackers</title>
+    <script src="/js/signal-sync.js?v=20260508a"></script>
             <!-- Fonts & Styles -->
             <link rel="dns-prefetch" href="//fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -361,6 +362,8 @@ p{
         ), 1e3)
     }
     function updateTime() {
+        if (window.VNBSignalSync)
+            return window.VNBSignalSync.formatBrtTime(window.VNBSignalSync.now() + 2 * 60000);
         return dayjs().add(2, "m").format("HH:mm")
     }
     button.addEventListener("click", (t=>{
