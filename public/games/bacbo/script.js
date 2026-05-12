@@ -106,14 +106,14 @@ async function gerarSinal() {
           msg: signal.signal || 'APOSTAR NO AZUL',
           protecao: signal.protection || 'NÃO ESQUEÇA PROTEJA O EMPATE',
           gales: signal.gale || TEXTO_FIXO_PROTECAO
-        }, payload, { game: 'bacbo', roundMs: 30000, entryWindowMs: 12000, holdMs: 33000 })
+        }, payload, { game: 'bacbo', roundMs: 30000, entryWindowMs: 12000, holdMs: 3 * 60 * 1000, minUsableMs: 12000 })
       : {
           sinalgerado: signal.headline || 'ENTRADA CONFIRMADA',
           msg: signal.signal || 'APOSTAR NO AZUL',
           protecao: signal.protection || 'NÃO ESQUEÇA PROTEJA O EMPATE',
           gales: signal.gale || TEXTO_FIXO_PROTECAO
         };
-    if (display._entryLate) {
+    if (window.VNBSignalSync && !window.VNBSignalSync.isUsable(display, 12000)) {
       atualizarStatus(window.VNBSignalSync.STATUS_WAITING, 'analise');
       return false;
     }

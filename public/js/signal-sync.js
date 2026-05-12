@@ -3,7 +3,8 @@
 
   var clockOffsetMs = 0;
   var syncedAt = 0;
-  var DEFAULT_HOLD_MS = 45000;
+  var DEFAULT_HOLD_MS = 3 * 60 * 1000;
+  var DEFAULT_MIN_USABLE_MS = 12 * 1000;
 
   function isFiniteNumber(value) {
     return Number.isFinite(Number(value));
@@ -59,6 +60,11 @@
     return target.getTime();
   }
 
+  function maxTextWindowMs(config) {
+    var holdMs = (config && config.holdMs) || DEFAULT_HOLD_MS;
+    return (config && config.maxTextWindowMs) || Math.max(holdMs * 2, 10 * 60 * 1000);
+  }
+
   function formatBrtTime(timestamp) {
     try {
       return new Intl.DateTimeFormat('pt-BR', {
@@ -82,7 +88,7 @@
     var roundMs = detectInterval(history, config.roundMs || 30000);
     var serverNow = parseTime(payload && payload.server_time) || now();
     var entryWindowMs = config.entryWindowMs || Math.min(Math.max(Math.round(roundMs * 0.45), 7000), 16000);
-    var validUntil = latestAt ? latestAt + roundMs + (config.graceMs || 1500) : serverNow + (config.holdMs || DEFAULT_HOLD_MS);
+    var validUntil = serverNow + (config.holdMs || DEFAULT_HOLD_MS);
     var entryUntil = latestAt ? latestAt + entryWindowMs : serverNow + entryWindowMs;
     return {
       latestAt: latestAt,
@@ -97,8 +103,21 @@
   }
 
   function attach(data, payload, config) {
+    config = config || {};
     var meta = metaFromPayload(payload, config);
     var copy = Object.assign({}, data || {});
+    var minUsableMs = config.minUsableMs || DEFAULT_MIN_USABLE_MS;
+    var displayValidUntil = parseValidUntilText(copy.protecao || copy.protection, meta.serverNow);
+    var displayRemainingMs = displayValidUntil ? displayValidUntil - meta.serverNow : 0;
+    var invalidDisplayClock = !!displayValidUntil && (displayRemainingMs < minUsableMs || displayRemainingMs > maxTextWindowMs(config));
+    if (displayValidUntil && !invalidDisplayClock) {
+      meta.validUntil = displayValidUntil;
+      meta.entryLate = false;
+    }
+    if (invalidDisplayClock || meta.validUntil - meta.serverNow < minUsableMs) {
+      meta.validUntil = meta.serverNow + (config.holdMs || DEFAULT_HOLD_MS);
+      meta.entryLate = false;
+    }
     copy._signalKey = meta.keyPrefix + ':' + signalText(copy);
     copy._validUntil = meta.validUntil;
     copy._entryUntil = meta.entryUntil;
@@ -106,7 +125,26 @@
     copy._nextRefreshMs = meta.nextRefreshMs;
     copy._serverTime = meta.serverNow;
     copy.timestamp = copy.timestamp || now();
+    copy.protecao = ensureValidUntilText(copy.protecao, meta.validUntil, invalidDisplayClock);
     return copy;
+  }
+
+  function hasClockText(text) {
+    return /(\d{1,2}):(\d{2})/.test(String(text || ''));
+  }
+
+  function ensureValidUntilText(text, validUntil, replaceExisting) {
+    var base = String(text || '').trim();
+    if (!validUntil || !Number.isFinite(Number(validUntil))) return base;
+    var label = 'Válido até ' + formatBrtTime(validUntil);
+    var validUntilPattern = /(\s*-\s*)?V[ÁA]LIDO\s+AT[ÉE]\s+\d{1,2}:\d{2}/i;
+    if (replaceExisting && validUntilPattern.test(base)) {
+      return base.replace(validUntilPattern, function (match) {
+        return /^\s*-\s*/.test(match) ? ' - ' + label : label;
+      });
+    }
+    if (hasClockText(base)) return base;
+    return base ? base + ' - ' + label : label;
   }
 
   function normalize(data, options) {
@@ -114,11 +152,17 @@
     options = options || {};
     var copy = Object.assign({}, data);
     var baseNow = now();
+    var textValidUntil = parseValidUntilText(copy.protecao, baseNow);
+    var textRemainingMs = textValidUntil ? textValidUntil - baseNow : 0;
+    var invalidTextClock = !!textValidUntil && (textRemainingMs < DEFAULT_MIN_USABLE_MS || textRemainingMs > maxTextWindowMs(options));
     if (!isFiniteNumber(copy._validUntil)) {
-      copy._validUntil = parseValidUntilText(copy.protecao, baseNow) || ((copy.timestamp || baseNow) + (options.holdMs || DEFAULT_HOLD_MS));
+      copy._validUntil = !invalidTextClock && textValidUntil ? textValidUntil : ((copy.timestamp || baseNow) + (options.holdMs || DEFAULT_HOLD_MS));
+    } else if (!invalidTextClock && textValidUntil && textValidUntil > Number(copy._validUntil)) {
+      copy._validUntil = textValidUntil;
     }
     copy._signalKey = copy._signalKey || signalText(copy);
     copy.timestamp = copy.timestamp || baseNow;
+    copy.protecao = ensureValidUntilText(copy.protecao, copy._validUntil, invalidTextClock);
     return copy;
   }
 
@@ -131,10 +175,19 @@
     var active = normalize(current);
     var next = normalize(incoming);
     if (!next) return false;
-    if (Number(next._validUntil || 0) && now() >= Number(next._validUntil)) return false;
-    if (next._entryLate && !isActive(active)) return false;
+    if (!isUsable(next)) return false;
     if (isActive(active) && active._signalKey !== next._signalKey) return false;
     return true;
+  }
+
+  function remainingMs(data) {
+    var normalized = normalize(data);
+    if (!normalized) return 0;
+    return Math.max(0, Number(normalized._validUntil || 0) - now());
+  }
+
+  function isUsable(data, minMs) {
+    return remainingMs(data) >= (minMs || DEFAULT_MIN_USABLE_MS);
   }
 
   window.VNBSignalSync = {
@@ -142,9 +195,11 @@
     attach: attach,
     formatBrtTime: formatBrtTime,
     isActive: isActive,
+    isUsable: isUsable,
     metaFromPayload: metaFromPayload,
     normalize: normalize,
     now: now,
+    remainingMs: remainingMs,
     rememberServerTime: rememberServerTime,
     shouldReplace: shouldReplace,
     syncClock: syncClock
