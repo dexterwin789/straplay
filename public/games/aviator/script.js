@@ -100,14 +100,14 @@ async function gerarSinal() {
           msg: signal.signal || TEXTO_SINAL,
           protecao: signal.protection || `VÁLIDO ATÉ ${gerarHorarioValidade(4).texto}`,
           gales: signal.gale || TEXTO_FIXO_PROTECAO
-        }, payload, { game: 'aviator', roundMs: 15000, entryWindowMs: 7000, holdMs: 4 * 60 * 1000, minUsableMs: 12000 })
+        }, payload, { game: 'aviator', roundMs: 15000, entryWindowMs: 7000, holdMs: 45 * 1000, minUsableMs: 5000 })
       : {
           sinalgerado: signal.headline || 'ENTRADA CONFIRMADA',
           msg: signal.signal || TEXTO_SINAL,
           protecao: signal.protection || `VÁLIDO ATÉ ${gerarHorarioValidade(4).texto}`,
           gales: signal.gale || TEXTO_FIXO_PROTECAO
         };
-    if (window.VNBSignalSync && !window.VNBSignalSync.isUsable(display, 12000)) {
+    if (window.VNBSignalSync && !window.VNBSignalSync.isUsable(display, 5000)) {
       atualizarStatus(window.VNBSignalSync.STATUS_WAITING, 'analise');
       return false;
     }

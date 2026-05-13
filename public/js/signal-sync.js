@@ -3,8 +3,9 @@
 
   var clockOffsetMs = 0;
   var syncedAt = 0;
-  var DEFAULT_HOLD_MS = 3 * 60 * 1000;
-  var DEFAULT_MIN_USABLE_MS = 12 * 1000;
+  var DEFAULT_HOLD_MS = 45 * 1000;
+  var DEFAULT_MIN_USABLE_MS = 5 * 1000;
+  var DEFAULT_ROUND_GRACE_MS = 6 * 1000;
 
   function isFiniteNumber(value) {
     return Number.isFinite(Number(value));
@@ -88,8 +89,14 @@
     var roundMs = detectInterval(history, config.roundMs || 30000);
     var serverNow = parseTime(payload && payload.server_time) || now();
     var entryWindowMs = config.entryWindowMs || Math.min(Math.max(Math.round(roundMs * 0.45), 7000), 16000);
-    var validUntil = serverNow + (config.holdMs || DEFAULT_HOLD_MS);
+    var graceMs = isFiniteNumber(config.graceMs) ? Number(config.graceMs) : DEFAULT_ROUND_GRACE_MS;
+    // Round-bound validity: signal lasts until the next round result is expected.
+    // For click-driven games (no history) we fall back to holdMs.
+    var validUntil = latestAt
+      ? latestAt + roundMs + graceMs
+      : serverNow + (config.holdMs || DEFAULT_HOLD_MS);
     var entryUntil = latestAt ? latestAt + entryWindowMs : serverNow + entryWindowMs;
+    var roundKey = latest && (latest.id || latest.created_at || latest.number || latest.result || latest.multiplier);
     return {
       latestAt: latestAt,
       roundMs: roundMs,
@@ -98,7 +105,8 @@
       validUntil: validUntil,
       entryLate: !!latestAt && serverNow > entryUntil && serverNow < validUntil,
       nextRefreshMs: latestAt ? Math.max(1200, Math.min(8000, validUntil - serverNow + 600)) : 2500,
-      keyPrefix: [config.game || 'game', latest && (latest.id || latest.created_at || latest.number || latest.result || latest.multiplier)].filter(Boolean).join(':')
+      keyPrefix: [config.game || 'game', roundKey].filter(Boolean).join(':'),
+      roundKey: roundKey || null
     };
   }
 
@@ -107,25 +115,23 @@
     var meta = metaFromPayload(payload, config);
     var copy = Object.assign({}, data || {});
     var minUsableMs = config.minUsableMs || DEFAULT_MIN_USABLE_MS;
-    var displayValidUntil = parseValidUntilText(copy.protecao || copy.protection, meta.serverNow);
-    var displayRemainingMs = displayValidUntil ? displayValidUntil - meta.serverNow : 0;
-    var invalidDisplayClock = !!displayValidUntil && (displayRemainingMs < minUsableMs || displayRemainingMs > maxTextWindowMs(config));
-    if (displayValidUntil && !invalidDisplayClock) {
-      meta.validUntil = displayValidUntil;
-      meta.entryLate = false;
-    }
-    if (invalidDisplayClock || meta.validUntil - meta.serverNow < minUsableMs) {
-      meta.validUntil = meta.serverNow + (config.holdMs || DEFAULT_HOLD_MS);
+    // If the round-bound validity is already too short, give a small grace window
+    // so the user can act on this round, but never longer than the round itself.
+    if (meta.validUntil - meta.serverNow < minUsableMs) {
+      var extension = Math.min(meta.roundMs || 30000, config.holdMs || DEFAULT_HOLD_MS);
+      meta.validUntil = meta.serverNow + extension;
       meta.entryLate = false;
     }
     copy._signalKey = meta.keyPrefix + ':' + signalText(copy);
+    copy._roundKey = meta.roundKey;
     copy._validUntil = meta.validUntil;
     copy._entryUntil = meta.entryUntil;
     copy._entryLate = meta.entryLate;
     copy._nextRefreshMs = meta.nextRefreshMs;
     copy._serverTime = meta.serverNow;
     copy.timestamp = copy.timestamp || now();
-    copy.protecao = ensureValidUntilText(copy.protecao, meta.validUntil, invalidDisplayClock);
+    // Always rewrite the displayed "Válido até" so it matches the round-bound validity.
+    copy.protecao = ensureValidUntilText(copy.protecao, meta.validUntil, true);
     return copy;
   }
 
@@ -152,17 +158,12 @@
     options = options || {};
     var copy = Object.assign({}, data);
     var baseNow = now();
-    var textValidUntil = parseValidUntilText(copy.protecao, baseNow);
-    var textRemainingMs = textValidUntil ? textValidUntil - baseNow : 0;
-    var invalidTextClock = !!textValidUntil && (textRemainingMs < DEFAULT_MIN_USABLE_MS || textRemainingMs > maxTextWindowMs(options));
     if (!isFiniteNumber(copy._validUntil)) {
-      copy._validUntil = !invalidTextClock && textValidUntil ? textValidUntil : ((copy.timestamp || baseNow) + (options.holdMs || DEFAULT_HOLD_MS));
-    } else if (!invalidTextClock && textValidUntil && textValidUntil > Number(copy._validUntil)) {
-      copy._validUntil = textValidUntil;
+      copy._validUntil = (copy.timestamp || baseNow) + (options.holdMs || DEFAULT_HOLD_MS);
     }
     copy._signalKey = copy._signalKey || signalText(copy);
     copy.timestamp = copy.timestamp || baseNow;
-    copy.protecao = ensureValidUntilText(copy.protecao, copy._validUntil, invalidTextClock);
+    copy.protecao = ensureValidUntilText(copy.protecao, copy._validUntil, false);
     return copy;
   }
 
@@ -175,8 +176,17 @@
     var active = normalize(current);
     var next = normalize(incoming);
     if (!next) return false;
+    // Reject signals already past their round validity.
     if (!isUsable(next)) return false;
-    if (isActive(active) && active._signalKey !== next._signalKey) return false;
+    // No active signal yet: accept.
+    if (!isActive(active)) return true;
+    // Same round (same roundKey when available, otherwise same full key): keep stable.
+    if (next._roundKey && active._roundKey && next._roundKey === active._roundKey) {
+      // Allow refreshing the displayed payload for the same round.
+      return active._signalKey !== next._signalKey;
+    }
+    if (!next._roundKey && !active._roundKey && active._signalKey === next._signalKey) return false;
+    // Different round: a new round always replaces the previous signal.
     return true;
   }
 

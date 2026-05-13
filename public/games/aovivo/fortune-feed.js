@@ -105,8 +105,8 @@
         game: 'xxxtreme-lightning-roulette',
         roundMs: 30000,
         entryWindowMs: 14000,
-        holdMs: 3 * 60 * 1000,
-        minUsableMs: 12000
+        graceMs: 6000,
+        minUsableMs: 5000
       });
     }
     fire('sinalGerado', display);
