@@ -165,6 +165,168 @@ body::after {
   animation: gradientShift 2s ease-in-out infinite;
 }
 
+.aviator-radar {
+  width: 520px;
+  max-width: calc(100vw - 28px);
+  margin: 12px auto 8px;
+  padding: 14px;
+  border: 1px solid rgba(255, 152, 0, 0.45);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(18, 18, 20, 0.94), rgba(10, 10, 12, 0.9));
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 1;
+}
+
+.radar-head {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.radar-pulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #20ff45;
+  box-shadow: 0 0 0 0 rgba(32, 255, 69, 0.6);
+  animation: radarPulse 1.2s ease-out infinite;
+}
+
+.radar-copy {
+  min-width: 0;
+}
+
+.radar-copy strong,
+.radar-copy small {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radar-copy strong {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  color: #fff;
+}
+
+.radar-copy small {
+  margin-top: 3px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.radar-percent {
+  min-width: 44px;
+  text-align: right;
+  font-size: 13px;
+  color: #20ff45;
+  font-weight: 700;
+}
+
+.radar-track {
+  height: 7px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.radar-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff9800, #20ff45, #00bcd4);
+  box-shadow: 0 0 18px rgba(32, 255, 69, 0.38);
+  transition: width 0.45s ease;
+}
+
+.radar-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.radar-metrics div {
+  min-width: 0;
+  padding: 9px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.045);
+  text-align: center;
+}
+
+.radar-metrics strong,
+.radar-metrics span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radar-metrics strong {
+  font-size: 15px;
+  color: #fff;
+}
+
+.radar-metrics span {
+  margin-top: 2px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.58);
+  text-transform: uppercase;
+}
+
+.radar-history {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  min-height: 24px;
+  margin-top: 12px;
+}
+
+.history-pill {
+  min-width: 47px;
+  padding: 5px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.history-blue {
+  color: #8bd8ff;
+  background: rgba(0, 188, 212, 0.15);
+}
+
+.history-purple {
+  color: #d8b4fe;
+  background: rgba(147, 51, 234, 0.18);
+}
+
+.history-pink {
+  color: #ff8ac7;
+  background: rgba(236, 72, 153, 0.18);
+}
+
+.history-muted {
+  min-width: 150px;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+@keyframes radarPulse {
+  0% { box-shadow: 0 0 0 0 rgba(32, 255, 69, 0.62); }
+  70% { box-shadow: 0 0 0 9px rgba(32, 255, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(32, 255, 69, 0); }
+}
+
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -412,6 +574,37 @@ body::after {
     padding: 8px 15px;
     font-size: 12px;
     border-radius: 8px;
+  }
+
+  .aviator-radar {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .radar-head {
+    grid-template-columns: 16px 1fr auto;
+    gap: 8px;
+  }
+
+  .radar-metrics {
+    gap: 6px;
+  }
+
+  .radar-metrics div {
+    padding: 8px 4px;
+  }
+
+  .radar-metrics strong {
+    font-size: 13px;
+  }
+
+  .radar-metrics span {
+    font-size: 8px;
+  }
+
+  .history-pill {
+    min-width: 42px;
+    font-size: 10px;
   }
 
   .logo {

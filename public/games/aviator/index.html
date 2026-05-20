@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VemNaBet - Aviator</title>
   <link rel="icon" href="/favicon.png" type="image/png">
-  <link rel="stylesheet" href="/games/aviator/style.css" />
+  <link rel="stylesheet" href="/games/aviator/style.css?v=20260520a" />
   <link rel="preconnect" href="https://vemnabet.bet" crossorigin>
   <link rel="dns-prefetch" href="https://vemnabet.bet">
   <link rel="preconnect" href="https://spribe.io" crossorigin>
@@ -25,6 +25,24 @@
 
   <div id="loadingMessage" class="sinal-container">
     <h2 class="sinal-text loading-text loading-analisando" id="loadingText">ANALISANDO AVIATOR...</h2>
+  </div>
+
+  <div class="aviator-radar" id="aviatorRadar">
+    <div class="radar-head">
+      <span class="radar-pulse" aria-hidden="true"></span>
+      <div class="radar-copy">
+        <strong id="radarTitle">Procurando padrão seguro</strong>
+        <small id="radarSubtitle">Aguardando novas rodadas do Aviator</small>
+      </div>
+      <span class="radar-percent" id="radarPercent">0%</span>
+    </div>
+    <div class="radar-track"><span id="radarProgress"></span></div>
+    <div class="radar-metrics">
+      <div><strong id="radarRounds">0</strong><span>rodadas</span></div>
+      <div><strong id="radarConfidence">--</strong><span>assertividade</span></div>
+      <div><strong id="radarWindow">--</strong><span>janela</span></div>
+    </div>
+    <div class="radar-history" id="radarHistory"></div>
   </div>
 
   <div id="sinalContainer" class="sinal-container">
@@ -67,7 +85,7 @@
     <a href="" target="_blank" rel="noopener noreferrer" class="guima-link"><b>VEMNABET</b></a>
   </footer>
 
-  <script src="/games/aviator/script.js?v=20260513a"></script>
+  <script src="/games/aviator/script.js?v=20260520a"></script>
 
 <style id="responsive-iframe-height">@media(max-width:600px){#iframe {
     display: block;
