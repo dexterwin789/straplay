@@ -3,6 +3,9 @@
   --ray-origin-y: 100%;
   --ray-strong: rgba(255,255,255,.04);
   --ray-soft: rgba(255,255,255,.02);
+  --aviator-red: #f21d21;
+  --aviator-red-dark: #8d0d12;
+  --aviator-panel: rgba(15, 15, 16, 0.93);
 }
 
 * {
@@ -11,12 +14,14 @@
 
 body {
   margin: 0;
-  background: #0b0b0b url('./public/img/Bglight.jpg') center center / cover no-repeat;
+  background: #070707;
   background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
   font-family: Arial, sans-serif;
   color: #fff;
+  position: relative;
+  isolation: isolate;
 }
 
 @media (max-width: 768px) {
@@ -32,26 +37,12 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image:
-    repeating-conic-gradient(
-      from -8deg at var(--ray-origin-x) var(--ray-origin-y),
-      var(--ray-strong) 0deg 1.2deg,
-      transparent 1.2deg 12deg
-    ),
-    repeating-conic-gradient(
-      from -6deg at var(--ray-origin-x) var(--ray-origin-y),
-      var(--ray-soft) 0deg .8deg,
-      transparent .8deg 6deg
-    );
+  background-image: repeating-conic-gradient(from -8deg at var(--ray-origin-x) var(--ray-origin-y), var(--ray-strong) 0deg 1.2deg, transparent 1.2deg 12deg), repeating-conic-gradient(from -6deg at var(--ray-origin-x) var(--ray-origin-y), var(--ray-soft) 0deg .8deg, transparent .8deg 6deg);
   filter: contrast(115%) brightness(110%);
 }
 
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  background: radial-gradient(ellipse 160% 120% at 0 100%, transparent 35%, rgba(0,0,0,.25) 100%);
+  content: none;
 }
 
 
@@ -84,8 +75,8 @@ body::after {
 .sinal-gerado {
   width: 380px;
   height: 40px;
-  border: 1px solid orange;
-  background-color: #1c1b1d;
+  border: 1px solid rgba(242, 29, 33, 0.7);
+  background-color: var(--aviator-panel);
   border-radius: 15px;
   display: flex;
   align-items: center;
@@ -109,8 +100,8 @@ body::after {
 .sinal-div,
 .gale-div {
   width: 150px;
-  border: 1px solid orange;
-  background-color: #1c1b1d;
+  border: 1px solid rgba(242, 29, 33, 0.7);
+  background-color: var(--aviator-panel);
   border-radius: 15px;
   padding: 10px;
 }
@@ -170,9 +161,9 @@ body::after {
   max-width: calc(100vw - 28px);
   margin: 12px auto 8px;
   padding: 14px;
-  border: 1px solid rgba(255, 152, 0, 0.45);
+  border: 1px solid rgba(242, 29, 33, 0.48);
   border-radius: 12px;
-  background: linear-gradient(180deg, rgba(18, 18, 20, 0.94), rgba(10, 10, 12, 0.9));
+  background: linear-gradient(180deg, rgba(22, 22, 24, 0.95), rgba(9, 9, 10, 0.92));
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   z-index: 1;
@@ -240,7 +231,7 @@ body::after {
   width: 0;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #ff9800, #20ff45, #00bcd4);
+  background: linear-gradient(90deg, var(--aviator-red), #ffb020, #20ff45);
   box-shadow: 0 0 18px rgba(32, 255, 69, 0.38);
   transition: width 0.45s ease;
 }
@@ -492,13 +483,7 @@ body::after {
 
   body::before {
     filter: contrast(125%) brightness(115%);
-    background-image:
-      repeating-conic-gradient(from -8deg at var(--ray-origin-x) var(--ray-origin-y), rgba(255,255,255,.055) 0deg 1.4deg, transparent 1.4deg 12deg),
-      repeating-conic-gradient(from -6deg at var(--ray-origin-x) var(--ray-origin-y), rgba(255,255,255,.03) 0deg 1deg, transparent 1deg 6deg);
-  }
-
-  body::after {
-    background: radial-gradient(ellipse 150% 110% at 0 100%, transparent 30%, rgba(0,0,0,.2) 100%);
+    background-image: repeating-conic-gradient(from -8deg at var(--ray-origin-x) var(--ray-origin-y), rgba(255,255,255,.055) 0deg 1.4deg, transparent 1.4deg 12deg), repeating-conic-gradient(from -6deg at var(--ray-origin-x) var(--ray-origin-y), rgba(255,255,255,.03) 0deg 1deg, transparent 1deg 6deg);
   }
 
   .results {

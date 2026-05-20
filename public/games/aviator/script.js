@@ -144,7 +144,30 @@ function criarFallback(history) {
   };
 }
 
+function usaFallbackOperacional(payload) {
+  const source = String(payload && payload.source ? payload.source : '').toLowerCase();
+  if (source === 'vps_operational') return true;
+  const history = Array.isArray(payload && payload.history) ? payload.history : [];
+  return history.length > 0 && history.every((row) => String(row.result_source || '').toLowerCase() === 'vps_operational');
+}
+
+function criarEsperaHistorico(payload) {
+  return {
+    sinalgerado: 'HISTÓRICO AO VIVO',
+    msg: 'Aguardando rodadas reais',
+    protecao: 'SEM ENTRADA AGORA',
+    gales: '--',
+    _validUntil: agora() + 15000,
+    _history: Array.isArray(payload && payload.history) ? payload.history.filter((row) => String(row.result_source || '').toLowerCase() !== 'vps_operational') : [],
+    _waitingRealHistory: true
+  };
+}
+
 function normalizarSinal(payload) {
+  if (!payload || payload._waitingRealHistory || usaFallbackOperacional(payload)) {
+    return criarEsperaHistorico(payload);
+  }
+
   const signal = payload && payload.current_signal;
   const history = Array.isArray(payload && payload.history) ? payload.history : [];
   if (!signal) return criarFallback(history);
@@ -184,6 +207,7 @@ async function buscarPayloadSinal() {
   const response = await fetch('/api/signals/aviator', { cache: 'no-store' });
   const payload = await response.json();
   if (!response.ok || !payload || payload.ok === false) throw new Error(payload && payload.msg ? payload.msg : 'Sem sinal');
+  if (usaFallbackOperacional(payload)) throw new Error(payload.msg || 'Aguardando histórico real do Aviator');
   return payload;
 }
 
@@ -216,6 +240,20 @@ function renderizarSinal(display) {
   protecaoDadosEl.textContent = display.protecao || `VÁLIDO ATÉ ${horario(validUntil)}`;
   galeDadosEl.innerHTML = `<strong>${display.gales || TEXTO_FIXO_PROTECAO}</strong>`;
   renderHistorico(display._history || []);
+
+  if (display._waitingRealHistory) {
+    cancelarExpiracaoAnterior();
+    if (countdownAtivo) {
+      clearInterval(countdownAtivo);
+      countdownAtivo = null;
+    }
+    setRadar(34, 'Aguardando histórico real', 'Sincronizando com o Aviator ao vivo', 0, '--', '--');
+    atualizarStatus('AGUARDANDO HISTÓRICO AO VIVO', 'analise');
+    btnEl.disabled = false;
+    btnEl.textContent = 'TENTAR NOVAMENTE';
+    return;
+  }
+
   setRadar(100, 'Sinal liberado', 'Entre somente dentro da janela exibida', (display._history || []).length || 30, '91%', `${Math.ceil((validUntil - agora()) / 1000)}s`);
   atualizarStatus('SINAL ENCONTRADO', 'ok');
   iniciarCountdownSinal(validUntil);
@@ -231,8 +269,8 @@ async function gerarSinal() {
       payloadAnalise = payload;
       renderHistorico(payload.history || []);
     })
-    .catch(() => {
-      payloadAnalise = { ok: true, history: [] };
+    .catch((erro) => {
+      payloadAnalise = { ok: false, _waitingRealHistory: true, msg: erro && erro.message ? erro.message : 'Aguardando histórico real do Aviator', history: [] };
     });
 
   let restante = Math.ceil(ANALISE_MS / 1000);
